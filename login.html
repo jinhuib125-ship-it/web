@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            z-index: 1001;
+            transition: transform 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .home-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #FFC107;
+            text-decoration: none;
+            font-size: 16px;
+            transition: opacity 0.3s ease;
+            z-index: 1001;
+        }
+
+        .home-button:hover {
+            opacity: 0.8;
+        }
+
+        .login-container {
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(255, 193, 7, 0.1);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            color: #FFC107;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #ccc;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            color: #FFC107;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #FFC107;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #ccc;
+        }
+
+        .remember-me input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #FFC107;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            opacity: 0.8;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            background-color: #FFC107;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #FFD54F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            color: #666;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background-color: #444;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .signup-link {
+            text-align: center;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #FFC107;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            opacity: 0.8;
+        }
+
+        .error-message,
+        .success-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid #F44336;
+            color: #F44336;
+        }
+
+        .success-message {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        @media (max-width: 500px) {
+            .login-container {
+                padding: 40px 30px;
+            }
+
+            .logo h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="refresh-btn" onclick="location.reload()">↻</div>
+    <a href="index.html" class="home-button">← 홈으로</a>
+
+    <div class="login-container">
+        <div class="logo">
+            <h1>NaNa GAMES</h1>
+            <p>계정에 로그인</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label">이메일</label>
+                <input type="email" class="form-input" id="email" placeholder="example@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">비밀번호</label>
+                <input type="password" class="form-input" id="password" placeholder="비밀번호 입력" required>
+            </div>
+
+            <div class="remember-forgot">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <span>로그인 상태 유지</span>
+                </label>
+                <a href="#" class="forgot-password" onclick="alert('비밀번호 찾기 기능은 추후 구현됩니다.'); return false;">비밀번호 찾기</a>
+            </div>
+
+            <button type="submit" class="submit-button">로그인</button>
+        </form>
+
+        <div class="divider">또는</div>
+
+        <div class="signup-link">
+            아직 계정이 없으신가요? <a href="signup.html">회원가입하기</a>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 시 이미 로그인되어 있으면 홈으로 리다이렉트
+        if (localStorage.getItem('currentUser')) {
+            window.location.href = 'index.html';
+        }
+
+        const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 입력값 가져오기
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // 에러 메시지 초기화
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // 유효성 검사
+            if (!email || !password) {
+                showError('이메일과 비밀번호를 입력해주세요.');
+                return;
+            }
+
+            // 사용자 데이터 가져오기
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // 사용자 찾기
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showError('이메일 또는 비밀번호가 올바르지 않습니다.');
+                return;
+            }
+
+            // 로그인 성공
+            const loginData = {
+                name: user.name,
+                email: user.email,
+                loginTime: new Date().toISOString(),
+                rememberMe: rememberMe
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(loginData));
+
+            showSuccess('로그인 성공! 홈페이지로 이동합니다...');
+
+            // 1초 후 홈페이지로 이동
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

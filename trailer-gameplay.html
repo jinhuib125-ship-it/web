@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플레이 영상 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .filter-section {
+            background-color: rgba(255, 215, 0, 0.05);
+            border: 1px solid #FFC107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-section label {
+            color: #FFC107;
+            font-weight: bold;
+        }
+
+        .filter-section select {
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #FFC107;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .video-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .video-card .thumbnail {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            overflow: hidden;
+        }
+
+        .video-card .thumbnail-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-card .thumbnail-icon {
+            font-size: 60px;
+            color: #FFC107;
+        }
+
+        .video-card .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #FF4444;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .video-card .badge.new {
+            background-color: #FF4444;
+        }
+
+        .video-card .badge.popular {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .video-card .duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #FFC107;
+        }
+
+        .video-card .content {
+            padding: 20px;
+        }
+
+        .video-card .title {
+            font-size: 18px;
+            color: #FFC107;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .video-card .category {
+            display: inline-block;
+            background-color: rgba(255, 215, 0, 0.2);
+            color: #FFC107;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .video-card .description {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .video-card .meta {
+            display: flex;
+            justify-content: flex-start;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #FFC107;
+            margin: 60px 0 30px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">플레이 영상</h1>
+
+        <div class="filter-section">
+            <label>카테고리:</label>
+            <select>
+                <option>전체</option>
+                <option>보스 전투</option>
+                <option>스토리</option>
+                <option>탐험</option>
+                <option>멀티플레이어</option>
+                <option>PvP</option>
+            </select>
+            <label>정렬:</label>
+            <select>
+                <option>최신순</option>
+                <option>조회수순</option>
+                <option>인기순</option>
+            </select>
+        </div>
+
+        <h2 class="section-title">🔥 인기 영상</h2>
+
+        <div class="video-grid">
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="badge popular">인기</div>
+                    <div class="duration">18:47</div>
+                </div>
+                <div class="content">
+                    <div class="category">보스 전투</div>
+                    <div class="title">최종 보스 "어둠의 군주" 노데미지 클리어</div>
+                    <div class="description">
+                        최고 난이도 최종 보스를 데미지 없이 클리어하는 완벽한 플레이! 모든 패턴과 공략법을 자세히 설명합니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 3,456,789</span>
+                        <span>📅 2일 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="badge popular">인기</div>
+                    <div class="duration">25:34</div>
+                </div>
+                <div class="content">
+                    <div class="category">스토리</div>
+                    <div class="title">챕터 11 "어둠의 성역" 풀 플레이스루</div>
+                    <div class="description">
+                        최신 업데이트로 추가된 챕터 11의 모든 스토리와 전투를 담았습니다. 숨겨진 아이템 위치도 공개!
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 2,134,567</span>
+                        <span>📅 1주 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="badge popular">인기</div>
+                    <div class="duration">12:23</div>
+                </div>
+                <div class="content">
+                    <div class="category">멀티플레이어</div>
+                    <div class="title">4인 협동 레이드 "고대의 신전" 초급자 가이드</div>
+                    <div class="description">
+                        레이드 던전을 처음 도전하는 분들을 위한 완벽 가이드! 각 보스 패턴과 팀 전략을 설명합니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 1,876,234</span>
+                        <span>📅 3일 전</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🆕 최신 영상</h2>
+
+        <div class="video-grid">
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="badge new">NEW</div>
+                    <div class="duration">15:42</div>
+                </div>
+                <div class="content">
+                    <div class="category">탐험</div>
+                    <div class="title">숨겨진 던전 완전 공략</div>
+                    <div class="description">
+                        많은 플레이어가 놓치는 숨겨진 던전 3곳의 위치와 보상 아이템을 소개합니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 456,789</span>
+                        <span>📅 1일 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="badge new">NEW</div>
+                    <div class="duration">22:18</div>
+                </div>
+                <div class="content">
+                    <div class="category">PvP</div>
+                    <div class="title">랭크 매치 TOP 10 전략 분석</div>
+                    <div class="description">
+                        현재 메타를 지배하는 상위권 플레이어들의 전략을 분석하고 실전에 적용하는 방법을 알려드립니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 345,678</span>
+                        <span>📅 1일 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="badge new">NEW</div>
+                    <div class="duration">10:55</div>
+                </div>
+                <div class="content">
+                    <div class="category">스토리</div>
+                    <div class="title">캐릭터 제론의 숨겨진 과거</div>
+                    <div class="description">
+                        제론의 백스토리와 관련된 히든 퀘스트를 모두 완료하고 진실을 밝혀냅니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 287,456</span>
+                        <span>📅 2일 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="duration">8:33</div>
+                </div>
+                <div class="content">
+                    <div class="category">보스 전투</div>
+                    <div class="title">챕터 9 보스 스피드런 (3분 24초)</div>
+                    <div class="description">
+                        최적화된 빌드와 스킬 로테이션으로 챕터 9 보스를 빠르게 클리어하는 방법!
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 234,567</span>
+                        <span>📅 3일 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="duration">19:47</div>
+                </div>
+                <div class="content">
+                    <div class="category">탐험</div>
+                    <div class="title">전체 맵 100% 완료 가이드</div>
+                    <div class="description">
+                        모든 지역의 숨겨진 요소, 수집품, 업적을 완벽하게 달성하는 방법을 단계별로 안내합니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 567,890</span>
+                        <span>📅 4일 전</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎮</div>
+                    </div>
+                    <div class="duration">14:29</div>
+                </div>
+                <div class="content">
+                    <div class="category">멀티플레이어</div>
+                    <div class="title">최강 팀 조합 TOP 5</div>
+                    <div class="description">
+                        협동 플레이에서 가장 강력한 5가지 팀 구성과 각 역할별 플레이 팁을 소개합니다.
+                    </div>
+                    <div class="meta">
+                        <span>👁️ 432,156</span>
+                        <span>📅 5일 전</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border: 1px solid #FFC107; border-radius: 12px;">
+            <h3 style="color: #FFC107; font-size: 24px; margin-bottom: 20px;">직접 플레이해보고 싶으신가요?</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                무료 체험판을 다운로드하고 지금 바로 게임을 시작하세요!
+            </p>
+            <button style="background-color: #FFC107; color: #000; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                    onclick="location.href='demo-pc.html'">
+                무료 체험판 다운로드 →
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

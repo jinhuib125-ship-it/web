@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자주 묻는 질문 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .search-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .search-box h3 {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 20px;
+            font-size: 16px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #FFC107;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-tab {
+            background-color: transparent;
+            border: 2px solid #FFC107;
+            color: #FFC107;
+            padding: 10px 25px;
+            font-size: 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .faq-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #FFC107;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            font-size: 32px;
+        }
+
+        .faq-item {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+
+        .faq-question-text {
+            font-size: 17px;
+            color: #FFC107;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .faq-icon {
+            font-size: 20px;
+            color: #FFC107;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 0 25px 25px;
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .faq-answer-content p {
+            margin-bottom: 15px;
+        }
+
+        .faq-answer-content ul {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .faq-answer-content li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .search-box {
+                padding: 20px;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">자주 묻는 질문 (FAQ)</h1>
+
+        <div class="search-box">
+            <h3>🔍 궁금한 내용을 검색해보세요</h3>
+            <input type="text" class="search-input" placeholder="예: 환불, 계정 복구, 시스템 요구사항..." onkeyup="alert('검색 기능은 실제 환경에서 구현됩니다')">
+        </div>
+
+        <div class="category-tabs">
+            <button class="category-tab active">전체</button>
+            <button class="category-tab">게임 플레이</button>
+            <button class="category-tab">계정</button>
+            <button class="category-tab">결제</button>
+            <button class="category-tab">기술 문제</button>
+        </div>
+
+        <!-- General Questions -->
+        <div class="faq-section">
+            <h2 class="section-title">
+                <span class="section-icon">🎮</span>
+                게임 플레이
+            </h2>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">Project NaNa는 어떤 장르의 게임인가요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            Project NaNa는 스토리 중심의 액션 RPG 게임입니다. 
+                            세 명의 플레이어블 캐릭터와 함께 광활한 오픈 월드를 탐험하며, 
+                            실시간 전투 시스템으로 적과 맞서 싸웁니다.
+                        </p>
+                        <p>
+                            싱글 플레이 스토리 모드를 중심으로, 협동 플레이, PvP, 레이드 등 
+                            다양한 멀티플레이어 콘텐츠도 즐길 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">체험판으로 어디까지 플레이할 수 있나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>체험판에서는 다음 콘텐츠를 플레이하실 수 있습니다:</p>
+                        <ul>
+                            <li>메인 스토리 챕터 1-2</li>
+                            <li>3명의 플레이어블 캐릭터 (레벨 15까지)</li>
+                            <li>첫 번째 오픈 월드 지역 탐험</li>
+                            <li>5개의 사이드 퀘스트</li>
+                            <li>기본 전투 시스템 체험</li>
+                        </ul>
+                        <p>
+                            체험판의 진행 상황은 정식 버전 구매 시 그대로 이어서 플레이하실 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">멀티플레이어는 필수인가요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            아니요, Project NaNa는 완전한 싱글 플레이 게임으로 즐기실 수 있습니다. 
+                            메인 스토리와 대부분의 콘텐츠는 혼자서도 충분히 완료 가능합니다.
+                        </p>
+                        <p>
+                            멀티플레이어는 선택 사항이며, 레이드 던전이나 PvP 같은 특정 콘텐츠만 
+                            멀티플레이어를 요구합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">난이도 조절이 가능한가요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            네, 4가지 난이도 옵션을 제공합니다:
+                        </p>
+                        <ul>
+                            <li><strong>스토리 모드:</strong> 스토리에 집중하고 싶은 플레이어용</li>
+                            <li><strong>일반:</strong> 균형잡힌 도전 과제</li>
+                            <li><strong>어려움:</strong> 숙련된 플레이어용</li>
+                            <li><strong>전설:</strong> 최고의 도전을 원하는 플레이어용</li>
+                        </ul>
+                        <p>난이도는 게임 진행 중 언제든지 변경 가능합니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">클리어 시간은 얼마나 되나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            <strong>메인 스토리만:</strong> 약 40-50시간<br>
+                            <strong>메인 + 사이드 퀘스트:</strong> 약 80-100시간<br>
+                            <strong>100% 완료:</strong> 150시간 이상
+                        </p>
+                        <p>
+                            멀티플레이어 콘텐츠와 엔드게임 콘텐츠를 포함하면 
+                            훨씬 더 오래 플레이하실 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Questions -->
+        <div class="faq-section">
+            <h2 class="section-title">
+                <span class="section-icon">👤</span>
+                계정 관련
+            </h2>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">계정을 만들려면 어떻게 해야 하나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            1. 게임을 실행하고 "회원가입" 버튼을 클릭합니다.<br>
+                            2. 이메일 주소와 비밀번호를 입력합니다.<br>
+                            3. 이메일로 전송된 인증 링크를 클릭합니다.<br>
+                            4. 계정 생성이 완료됩니다!
+                        </p>
+                        <p>
+                            Steam, Epic Games, Google 계정으로도 간편하게 가입하실 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">여러 플랫폼에서 같은 계정을 사용할 수 있나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            네! Project NaNa는 크로스 플랫폼 계정을 지원합니다. 
+                            하나의 계정으로 PC, 모바일, 웹 버전 모두에서 플레이할 수 있으며, 
+                            진행 상황은 클라우드에 자동으로 동기화됩니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">계정을 삭제하고 싶어요.</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            계정 삭제는 공식 웹사이트의 "계정 설정" 페이지에서 진행할 수 있습니다. 
+                            계정 삭제 시 모든 게임 진행 상황과 구매 내역이 영구적으로 삭제되며, 
+                            이는 복구할 수 없습니다.
+                        </p>
+                        <p>
+                            계정 삭제를 요청하시면 30일 동안의 유예 기간이 주어지며, 
+                            이 기간 내에는 삭제를 취소하실 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Questions -->
+        <div class="faq-section">
+            <h2 class="section-title">
+                <span class="section-icon">💳</span>
+                결제 관련
+            </h2>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">게임 가격은 얼마인가요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            <strong>스탠다드 에디션:</strong> ₩49,800<br>
+                            <strong>디럭스 에디션:</strong> ₩69,800 (추가 콘텐츠 포함)<br>
+                            <strong>얼티밋 에디션:</strong> ₩99,800 (시즌 패스 포함)
+                        </p>
+                        <p>
+                            체험판은 무료로 제공되며, 정식 버전 구매 시 
+                            체험판 진행 상황을 그대로 이어갈 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">환불 정책은 어떻게 되나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            구매 후 14일 이내, 플레이 시간 2시간 미만일 경우 
+                            전액 환불이 가능합니다. 환불 요청은 구매하신 플랫폼을 통해 진행하실 수 있습니다.
+                        </p>
+                        <p>
+                            Steam, Epic Games 등 각 플랫폼의 환불 정책이 적용되며, 
+                            자세한 사항은 해당 플랫폼의 환불 정책을 참고해주세요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">인앱 결제나 유료 DLC가 있나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            게임 내 인앱 결제는 없으며, 모든 게임 콘텐츠를 
+                            추가 비용 없이 즐기실 수 있습니다.
+                        </p>
+                        <p>
+                            선택 사항으로 외형 아이템(스킨)을 판매하지만, 
+                            이는 게임 플레이에 영향을 주지 않는 순수 외형 아이템입니다. 
+                            또한 향후 출시될 대형 확장팩은 유료 DLC로 제공될 예정입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Questions -->
+        <div class="faq-section">
+            <h2 class="section-title">
+                <span class="section-icon">🔧</span>
+                기술 문제
+            </h2>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">게임이 실행되지 않아요.</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>다음 해결 방법을 순서대로 시도해보세요:</p>
+                        <ul>
+                            <li>PC를 재시작합니다</li>
+                            <li>그래픽 드라이버를 최신 버전으로 업데이트합니다</li>
+                            <li>Windows를 최신 버전으로 업데이트합니다</li>
+                            <li>게임을 관리자 권한으로 실행합니다</li>
+                            <li>바이러스 백신/방화벽에서 게임을 예외 처리합니다</li>
+                            <li>게임 파일의 무결성을 검사합니다</li>
+                        </ul>
+                        <p>
+                            문제가 계속되면 자세한 에러 메시지와 함께 
+                            고객 지원팀에 문의해주세요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">프레임이 낮게 나와요.</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>성능 향상을 위한 팁:</p>
+                        <ul>
+                            <li>그래픽 설정을 "보통" 또는 "낮음"으로 조정</li>
+                            <li>해상도를 낮춤 (예: 1080p → 720p)</li>
+                            <li>수직 동기화(V-Sync) 끄기</li>
+                            <li>배경 프로그램 종료</li>
+                            <li>그림자 품질과 안티앨리어싱 낮추기</li>
+                            <li>최신 그래픽 드라이버 설치</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <div class="faq-question-text">컨트롤러를 사용할 수 있나요?</div>
+                    <div class="faq-icon">▼</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>
+                            네, 다음 컨트롤러를 공식 지원합니다:
+                        </p>
+                        <ul>
+                            <li>Xbox 시리즈 컨트롤러 (유선/무선)</li>
+                            <li>PlayStation 4/5 DualShock/DualSense 컨트롤러</li>
+                            <li>Nintendo Switch Pro 컨트롤러</li>
+                            <li>대부분의 DirectInput/XInput 호환 컨트롤러</li>
+                        </ul>
+                        <p>
+                            컨트롤러를 연결하면 자동으로 인식되며, 
+                            게임 내 설정에서 버튼 매핑을 변경할 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border: 1px solid #FFC107; border-radius: 12px;">
+            <h3 style="color: #FFC107; font-size: 24px; margin-bottom: 20px;">궁금한 점이 해결되지 않으셨나요?</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                추가 문의사항이 있으시면 고객 지원팀에 연락해주세요!
+            </p>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <button style="background-color: #FFC107; color: #000; border: none; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                        onclick="location.href='qna-contact.html'">
+                    문의하기
+                </button>
+                <button style="background-color: transparent; color: #FFC107; border: 2px solid #FFC107; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                        onclick="location.href='qna-bug.html'">
+                    버그 신고
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

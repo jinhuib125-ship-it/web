@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OST 미리 듣기 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .player-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .now-playing {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .album-art {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FFC107, #FFA500);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            flex-shrink: 0;
+        }
+
+        .track-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .track-title {
+            font-size: 28px;
+            color: #FFC107;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .track-artist {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .track-description {
+            font-size: 14px;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 215, 0, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 30%;
+            background-color: #FFC107;
+            transition: width 0.1s;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: flex-start;
+            font-size: 14px;
+            color: #999;
+            margin-top: -10px;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 215, 0, 0.2);
+            border: 2px solid #FFC107;
+            border-radius: 50%;
+            color: #FFC107;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.play {
+            width: 80px;
+            height: 80px;
+            font-size: 32px;
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .tracklist {
+            margin-bottom: 60px;
+        }
+
+        .tracklist-title {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 30px;
+        }
+
+        .track-item {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .track-item:hover {
+            transform: translateX(10px);
+            border-color: #FFC107;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.08));
+        }
+
+        .track-number {
+            font-size: 24px;
+            color: #FFC107;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .track-details {
+            flex: 1;
+        }
+
+        .track-name {
+            font-size: 18px;
+            color: #FFC107;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .track-meta {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .track-duration {
+            font-size: 16px;
+            color: #ccc;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .play-icon {
+            font-size: 24px;
+            color: #FFC107;
+        }
+
+        .album-info {
+            background-color: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid #FFC107;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .album-info h3 {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 15px;
+        }
+
+        .album-info p {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .now-playing {
+                flex-direction: column;
+            }
+
+            .album-art {
+                width: 100%;
+                height: 300px;
+            }
+
+            .player-section {
+                padding: 25px;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">OST 미리 듣기</h1>
+
+        <div class="player-section">
+            <div class="now-playing">
+                <div class="album-art">🎵</div>
+                <div class="track-info">
+                    <div class="track-title">희망의 여정 (Main Theme)</div>
+                    <div class="track-artist">박준서 (Jun Seo Park) - Project NaNa OST</div>
+                    <div class="track-description">
+                        게임의 메인 테마곡. 웅장한 오케스트라 사운드와 감동적인 멜로디가 
+                        플레이어의 여정을 함께합니다. 50인조 오케스트라의 라이브 녹음으로 제작되었습니다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="player-controls">
+                <div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="time-info">
+                        <span>1:47</span>
+                        <span>3:42</span>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <div class="control-btn" onclick="alert('이전 곡')">⏮</div>
+                    <div class="control-btn play" onclick="alert('재생/일시정지')">▶</div>
+                    <div class="control-btn" onclick="alert('다음 곡')">⏭</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="album-info">
+            <h3>📀 Project NaNa Original Soundtrack</h3>
+            <p>
+                작곡가 박준서가 2년에 걸쳐 완성한 Project NaNa의 공식 사운드트랙입니다. 
+                총 25곡으로 구성되어 있으며, 오케스트라, 전자음악, 민속 음악이 조화롭게 어우러져 
+                게임의 다양한 분위기를 완벽하게 표현합니다.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong style="color: #FFC107;">전체 재생 시간:</strong> 1시간 42분<br>
+                <strong style="color: #FFC107;">발매일:</strong> 2024년 12월 1일<br>
+                <strong style="color: #FFC107;">녹음:</strong> 서울 필하모닉 오케스트라
+            </p>
+        </div>
+
+        <div class="tracklist">
+            <h2 class="tracklist-title">전체 트랙 리스트</h2>
+
+            <div class="track-item" onclick="alert('트랙 재생: 희망의 여정')">
+                <div class="track-number">01</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">희망의 여정 (Main Theme)</div>
+                    <div class="track-meta">오케스트라 | 메인 테마</div>
+                </div>
+                <div class="track-duration">3:42</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 평온한 마을')">
+                <div class="track-number">02</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">평온한 마을</div>
+                    <div class="track-meta">어쿠스틱 | 마을 BGM</div>
+                </div>
+                <div class="track-duration">2:58</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 전투의 서막')">
+                <div class="track-number">03</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">전투의 서막</div>
+                    <div class="track-meta">액션 | 일반 전투</div>
+                </div>
+                <div class="track-duration">4:15</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 어둠의 군주')">
+                <div class="track-number">04</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">어둠의 군주</div>
+                    <div class="track-meta">오케스트라 | 보스 전투</div>
+                </div>
+                <div class="track-duration">5:33</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 비밀의 숲')">
+                <div class="track-number">05</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">비밀의 숲</div>
+                    <div class="track-meta">앰비언트 | 탐험</div>
+                </div>
+                <div class="track-duration">3:27</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 아리아의 테마')">
+                <div class="track-number">06</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">아리아의 테마</div>
+                    <div class="track-meta">오케스트라 | 캐릭터 테마</div>
+                </div>
+                <div class="track-duration">4:01</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 카엘의 테마')">
+                <div class="track-number">07</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">카엘의 테마</div>
+                    <div class="track-meta">민속 음악 | 캐릭터 테마</div>
+                </div>
+                <div class="track-duration">3:44</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 제론의 테마')">
+                <div class="track-number">08</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">제론의 테마</div>
+                    <div class="track-meta">신비로운 | 캐릭터 테마</div>
+                </div>
+                <div class="track-duration">3:52</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 고대의 신전')">
+                <div class="track-number">09</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">고대의 신전</div>
+                    <div class="track-meta">미스터리 | 던전</div>
+                </div>
+                <div class="track-duration">4:28</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 빙하 지대')">
+                <div class="track-number">10</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">빙하 지대</div>
+                    <div class="track-meta">앰비언트 | 필드</div>
+                </div>
+                <div class="track-duration">3:15</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 승리의 함성')">
+                <div class="track-number">11</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">승리의 함성</div>
+                    <div class="track-meta">오케스트라 | 승리 팡파레</div>
+                </div>
+                <div class="track-duration">1:42</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 슬픈 이별')">
+                <div class="track-number">12</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">슬픈 이별</div>
+                    <div class="track-meta">피아노 | 감동 씬</div>
+                </div>
+                <div class="track-duration">2:55</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 어둠의 성역')">
+                <div class="track-number">13</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">어둠의 성역</div>
+                    <div class="track-meta">다크 오케스트라 | 최종 던전</div>
+                </div>
+                <div class="track-duration">6:12</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 최후의 결전')">
+                <div class="track-number">14</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">최후의 결전</div>
+                    <div class="track-meta">오케스트라 + 코러스 | 최종 보스</div>
+                </div>
+                <div class="track-duration">7:28</div>
+            </div>
+
+            <div class="track-item" onclick="alert('트랙 재생: 새로운 시작')">
+                <div class="track-number">15</div>
+                <div class="play-icon">▶</div>
+                <div class="track-details">
+                    <div class="track-name">새로운 시작 (Ending Theme)</div>
+                    <div class="track-meta">오케스트라 | 엔딩</div>
+                </div>
+                <div class="track-duration">5:47</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border: 1px solid #FFC107; border-radius: 12px;">
+            <h3 style="color: #FFC107; font-size: 24px; margin-bottom: 20px;">💿 전체 OST 구매하기</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                Project NaNa의 모든 음악을 고음질(FLAC/MP3)로 소장하세요!<br>
+                Spotify, Apple Music, YouTube Music에서도 스트리밍 가능합니다.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <button style="background-color: #FFC107; color: #000; border: none; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                        onclick="alert('디지털 앨범 구매 페이지로 이동합니다')">
+                    디지털 앨범 구매 ($14.99)
+                </button>
+                <button style="background-color: transparent; color: #FFC107; border: 2px solid #FFC107; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                        onclick="alert('스트리밍 서비스로 이동합니다')">
+                    스트리밍 듣기
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

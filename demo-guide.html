@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플레이 가이드 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            font-size: 36px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .control-item {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .key-display {
+            background-color: #FFC107;
+            color: #000;
+            font-weight: bold;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 4px 0 #B8860B;
+        }
+
+        .action-desc {
+            flex: 1;
+        }
+
+        .action-desc .title {
+            font-size: 16px;
+            color: #FFC107;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .action-desc .desc {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .tips-list {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .tip-item {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .tip-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .tip-item h3 {
+            font-size: 20px;
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        .tip-item p {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .character-card {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .character-card .icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+
+        .character-card .name {
+            font-size: 22px;
+            color: #FFC107;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .character-card .class {
+            font-size: 14px;
+            color: #FFA500;
+            margin-bottom: 15px;
+        }
+
+        .character-card .desc {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">플레이 가이드</h1>
+
+        <div class="section">
+            <h2><span class="section-icon">⌨️</span>기본 조작법 (PC)</h2>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <div class="key-display">W A S D</div>
+                    <div class="action-desc">
+                        <div class="title">이동</div>
+                        <div class="desc">캐릭터를 상하좌우로 이동합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">마우스</div>
+                    <div class="action-desc">
+                        <div class="title">시점 조작</div>
+                        <div class="desc">마우스를 움직여 시점을 변경합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">좌클릭</div>
+                    <div class="action-desc">
+                        <div class="title">기본 공격</div>
+                        <div class="desc">장착한 무기로 적을 공격합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">우클릭</div>
+                    <div class="action-desc">
+                        <div class="title">특수 공격</div>
+                        <div class="desc">강력한 특수 공격을 사용합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">Space</div>
+                    <div class="action-desc">
+                        <div class="title">점프 / 회피</div>
+                        <div class="desc">점프하거나 위험을 회피합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">Shift</div>
+                    <div class="action-desc">
+                        <div class="title">달리기</div>
+                        <div class="desc">빠르게 이동합니다 (스태미나 소모)</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">Q / E</div>
+                    <div class="action-desc">
+                        <div class="title">스킬 1 / 2</div>
+                        <div class="desc">캐릭터 고유 스킬을 사용합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">R</div>
+                    <div class="action-desc">
+                        <div class="title">재장전 / 상호작용</div>
+                        <div class="desc">무기 재장전 또는 오브젝트와 상호작용</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">I</div>
+                    <div class="action-desc">
+                        <div class="title">인벤토리</div>
+                        <div class="desc">소지품 목록을 확인합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">M</div>
+                    <div class="action-desc">
+                        <div class="title">지도</div>
+                        <div class="desc">월드 맵을 엽니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">Tab</div>
+                    <div class="action-desc">
+                        <div class="title">스킬 트리</div>
+                        <div class="desc">캐릭터 능력치와 스킬을 확인합니다</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">ESC</div>
+                    <div class="action-desc">
+                        <div class="title">메뉴</div>
+                        <div class="desc">게임 메뉴를 엽니다</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="section-icon">📱</span>모바일 조작법</h2>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <div class="key-display">좌측</div>
+                    <div class="action-desc">
+                        <div class="title">가상 조이스틱</div>
+                        <div class="desc">캐릭터 이동</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">우측</div>
+                    <div class="action-desc">
+                        <div class="title">시점 조작</div>
+                        <div class="desc">화면을 드래그하여 시점 변경</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">탭</div>
+                    <div class="action-desc">
+                        <div class="title">빠른 공격</div>
+                        <div class="desc">화면을 탭하여 빠르게 공격</div>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="key-display">버튼</div>
+                    <div class="action-desc">
+                        <div class="title">스킬 사용</div>
+                        <div class="desc">화면 하단 스킬 버튼 터치</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="section-icon">👤</span>플레이어블 캐릭터</h2>
+            <div class="character-grid">
+                <div class="character-card">
+                    <div class="icon">⚔️</div>
+                    <div class="name">아리아</div>
+                    <div class="class">전사 (Warrior)</div>
+                    <div class="desc">
+                        높은 방어력과 근접 전투에 특화된 캐릭터. 
+                        강력한 검술과 방패로 적의 공격을 막아냅니다.
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="icon">🏹</div>
+                    <div class="name">카엘</div>
+                    <div class="class">궁수 (Archer)</div>
+                    <div class="desc">
+                        원거리 공격과 빠른 기동성이 장점. 
+                        활과 화살로 적을 멀리서 제압합니다.
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="icon">✨</div>
+                    <div class="name">제론</div>
+                    <div class="class">마법사 (Mage)</div>
+                    <div class="desc">
+                        강력한 마법 공격을 구사하는 캐릭터. 
+                        다양한 속성 마법으로 전장을 지배합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="section-icon">💡</span>초보자를 위한 팁</h2>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <h3>1. 튜토리얼을 꼭 완료하세요</h3>
+                    <p>
+                        게임의 기본 메커니즘을 익히는 것이 중요합니다. 
+                        튜토리얼을 건너뛰지 말고 모든 과정을 완료하면 기본 장비와 경험치를 얻을 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <h3>2. 자주 세이브하세요</h3>
+                    <p>
+                        중요한 전투나 탐험 전에는 반드시 게임을 저장하세요. 
+                        자동 저장 기능이 있지만 수동 저장을 병행하는 것이 안전합니다.
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <h3>3. 자원 관리가 핵심입니다</h3>
+                    <p>
+                        체력 포션, 스태미나, 마나 등의 자원을 효율적으로 관리하세요. 
+                        전투 중에는 언제든지 회복 아이템을 사용할 수 있으니 아끼지 마세요.
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <h3>4. 적의 패턴을 학습하세요</h3>
+                    <p>
+                        각 적은 고유한 공격 패턴을 가지고 있습니다. 
+                        패턴을 파악하고 적절한 타이밍에 회피하거나 반격하는 것이 중요합니다.
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <h3>5. 사이드 퀘스트를 활용하세요</h3>
+                    <p>
+                        메인 스토리만 진행하지 말고 사이드 퀘스트도 수행하세요. 
+                        경험치, 골드, 희귀 아이템을 얻을 수 있으며 캐릭터를 강화할 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <h3>6. 장비를 정기적으로 업그레이드하세요</h3>
+                    <p>
+                        더 나은 무기와 방어구를 찾으면 즉시 교체하세요. 
+                        장비 강화 시스템을 활용하여 기존 장비를 개선할 수도 있습니다.
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <h3>7. 멀티플레이어를 시도해보세요</h3>
+                    <p>
+                        혼자 진행하기 어려운 던전이나 보스가 있다면 다른 플레이어와 협력하세요. 
+                        파티 플레이는 더 많은 보상과 재미를 제공합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05)); border: 1px solid #4CAF50; border-radius: 12px;">
+            <h3 style="color: #4CAF50; font-size: 24px; margin-bottom: 20px;">문제가 발생하셨나요?</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                버그를 발견하셨거나 게임 플레이 중 문제가 발생했다면<br>
+                언제든지 버그 제보 페이지를 통해 알려주세요!
+            </p>
+            <button style="background-color: #4CAF50; color: #fff; border: none; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;"
+                    onclick="location.href='demo-bug.html'">
+                버그 제보하기 →
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

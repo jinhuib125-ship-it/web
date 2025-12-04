@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게임 시스템 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .system-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .section-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #FFC107, #FFA500);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .section-title-text {
+            flex: 1;
+        }
+
+        .section-title-text h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 5px;
+        }
+
+        .section-title-text p {
+            font-size: 16px;
+            color: #999;
+        }
+
+        .system-content {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #FFC107;
+            transform: translateY(-5px);
+        }
+
+        .feature-card h4 {
+            color: #FFC107;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .progression-tree {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tree-node {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border: 2px solid #FFC107;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .tree-node-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .tree-node-label {
+            font-size: 11px;
+            color: #FFC107;
+            text-align: center;
+        }
+
+        .info-box {
+            background-color: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid #FFC107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #FFC107;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #ccc;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .system-section {
+                padding: 25px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">게임 시스템</h1>
+
+        <!-- Combat System -->
+        <div class="system-section">
+            <div class="section-header">
+                <div class="section-icon">⚔️</div>
+                <div class="section-title-text">
+                    <h2>전투 시스템</h2>
+                    <p>다이나믹하고 전략적인 실시간 전투</p>
+                </div>
+            </div>
+
+            <div class="system-content">
+                Project NaNa는 액션 지향적인 실시간 전투 시스템을 채택하고 있습니다. 
+                플레이어의 반응 속도와 전략적 판단이 모두 중요하며, 각 캐릭터의 독특한 플레이 스타일이 
+                전투에 깊이를 더합니다.
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>💥 콤보 시스템</h4>
+                    <p>
+                        기본 공격과 스킬을 연계하여 강력한 콤보를 만들어낼 수 있습니다. 
+                        10히트 이상 연속 공격 시 데미지 보너스가 적용됩니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎯 회피 & 패리</h4>
+                    <p>
+                        적절한 타이밍에 회피하면 슬로우 모션이 발동되며, 
+                        패리에 성공하면 적을 무방비 상태로 만들 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⚡ 스킬 쿨타임</h4>
+                    <p>
+                        각 스킬은 고유한 쿨타임을 가지며, 전투 중 적절한 스킬 로테이션이 
+                        승리의 열쇠입니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🔄 캐릭터 전환</h4>
+                    <p>
+                        전투 중 언제든지 캐릭터를 전환할 수 있으며, 
+                        각 캐릭터의 장점을 활용한 전략이 중요합니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎭 적 패턴 학습</h4>
+                    <p>
+                        각 보스와 엘리트 몬스터는 독특한 공격 패턴을 가지고 있으며, 
+                        이를 학습하고 대응하는 것이 필수적입니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🌟 궁극기 게이지</h4>
+                    <p>
+                        전투 중 공격과 피격 시 충전되며, 가득 차면 강력한 궁극기를 
+                        사용할 수 있습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skill Tree System -->
+        <div class="system-section">
+            <div class="section-header">
+                <div class="section-icon">🌳</div>
+                <div class="section-title-text">
+                    <h2>스킬 트리 시스템</h2>
+                    <p>캐릭터를 자신만의 스타일로 성장시키세요</p>
+                </div>
+            </div>
+
+            <div class="system-content">
+                레벨업 시 획득하는 스킬 포인트로 다양한 능력을 해금하고 강화할 수 있습니다. 
+                각 캐릭터는 3개의 특화 트리를 가지고 있으며, 플레이 스타일에 맞춰 선택할 수 있습니다.
+            </div>
+
+            <div class="progression-tree">
+                <div class="tree-level">
+                    <div class="tree-node">
+                        <div class="tree-node-icon">⚔️</div>
+                        <div class="tree-node-label">공격 특화</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-node-icon">🛡️</div>
+                        <div class="tree-node-label">방어 특화</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-node-icon">⚡</div>
+                        <div class="tree-node-label">속도 특화</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 스킬 초기화</h4>
+                <p>
+                    스킬 포인트는 언제든지 무료로 초기화할 수 있어, 
+                    다양한 빌드를 실험해볼 수 있습니다. 
+                    PvP와 PvE에 따라 서로 다른 빌드를 저장하고 불러올 수도 있습니다.
+                </p>
+            </div>
+        </div>
+
+        <!-- Equipment System -->
+        <div class="system-section">
+            <div class="section-header">
+                <div class="section-icon">🎒</div>
+                <div class="section-title-text">
+                    <h2>장비 & 아이템 시스템</h2>
+                    <p>강력한 장비로 전투력을 높이세요</p>
+                </div>
+            </div>
+
+            <div class="system-content">
+                다양한 등급과 옵션을 가진 장비를 획득하고 강화할 수 있습니다. 
+                세트 아이템을 모으면 추가 보너스 효과가 발동됩니다.
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>⭐ 장비 등급</h4>
+                    <p>
+                        일반(흰색) → 고급(녹색) → 희귀(파란색) → 영웅(보라색) → 
+                        전설(금색) → 신화(빨간색)
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🔨 강화 시스템</h4>
+                    <p>
+                        장비를 +15까지 강화할 수 있으며, 실패 시 장비가 파괴되지 않고 
+                        강화 수치만 하락합니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>💎 옵션 재조합</h4>
+                    <p>
+                        특별한 재료를 사용하여 장비의 랜덤 옵션을 변경할 수 있습니다. 
+                        원하는 옵션을 잠가 보존할 수도 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎯 세트 효과</h4>
+                    <p>
+                        같은 세트의 장비를 2개, 4개, 6개 착용 시 
+                        강력한 세트 보너스가 활성화됩니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🔮 소켓 시스템</h4>
+                    <p>
+                        장비에 소켓을 뚫고 보석을 장착하여 
+                        추가 능력치를 부여할 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>✨ 외형 변환</h4>
+                    <p>
+                        원하는 장비의 외형을 다른 장비에 적용할 수 있어, 
+                        성능과 외모를 모두 만족시킬 수 있습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crafting System -->
+        <div class="system-section">
+            <div class="section-header">
+                <div class="section-icon">⚒️</div>
+                <div class="section-title-text">
+                    <h2>제작 & 크래프팅</h2>
+                    <p>필요한 아이템을 직접 제작하세요</p>
+                </div>
+            </div>
+
+            <div class="system-content">
+                탐험 중 획득한 재료로 다양한 아이템을 제작할 수 있습니다. 
+                제작 레벨을 올릴수록 더 강력한 아이템을 만들 수 있습니다.
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🗡️ 무기 제작</h4>
+                    <p>
+                        희귀 재료를 모아 강력한 무기를 제작할 수 있습니다. 
+                        제작 시 일정 확률로 상위 등급으로 제작됩니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🧪 포션 제작</h4>
+                    <p>
+                        약초를 채집하여 체력, 마나 회복 포션과 버프 포션을 만들 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🍳 요리 시스템</h4>
+                    <p>
+                        식재료로 요리를 만들어 일정 시간 동안 능력치 버프를 받을 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>💎 보석 가공</h4>
+                    <p>
+                        원석을 가공하여 장비에 장착할 수 있는 보석으로 만들 수 있습니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>🏆 마스터 제작</h4>
+                <p>
+                    제작 레벨이 최대치에 도달하면 마스터 제작이 가능해집니다. 
+                    마스터 제작은 항상 최고 품질의 아이템을 보장하며, 
+                    희귀한 특수 옵션이 추가될 확률이 높습니다.
+                </p>
+            </div>
+        </div>
+
+        <!-- Multiplayer System -->
+        <div class="system-section">
+            <div class="section-header">
+                <div class="section-icon">👥</div>
+                <div class="section-title-text">
+                    <h2>멀티플레이어</h2>
+                    <p>친구들과 함께 모험을 떠나세요</p>
+                </div>
+            </div>
+
+            <div class="system-content">
+                최대 4인까지 함께 플레이할 수 있으며, 협동 던전, PvP 아레나, 레이드 등 
+                다양한 멀티플레이어 콘텐츠를 즐길 수 있습니다.
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🤝 협동 플레이</h4>
+                    <p>
+                        스토리 모드를 포함한 대부분의 콘텐츠를 친구와 함께 플레이할 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🏰 레이드 던전</h4>
+                    <p>
+                        4인 파티가 필요한 고난이도 던전으로, 
+                        강력한 보스와 최고급 보상이 기다립니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⚔️ PvP 아레나</h4>
+                    <p>
+                        1v1, 2v2, 3v3 모드로 다른 플레이어와 실력을 겨룰 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🏆 길드 시스템</h4>
+                    <p>
+                        길드를 만들거나 가입하여 길드 전용 콘텐츠와 
+                        보상을 즐길 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🌊 길드 전쟁</h4>
+                    <p>
+                        주간 길드 전쟁에 참여하여 다른 길드와 영토를 두고 경쟁합니다.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎁 협동 보너스</h4>
+                    <p>
+                        파티 플레이 시 경험치와 드랍률에 보너스가 적용됩니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border: 1px solid #FFC107; border-radius: 12px;">
+            <h3 style="color: #FFC107; font-size: 24px; margin-bottom: 20px;">깊이 있는 게임 시스템을 직접 경험하세요</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                무료 체험판을 다운로드하고 모든 시스템을 체험해보세요!
+            </p>
+            <button style="background-color: #FFC107; color: #000; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                    onclick="location.href='demo-pc.html'">
+                체험판 다운로드 →
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

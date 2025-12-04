@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게임 정책 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background-color: transparent;
+            border: none;
+            color: #999;
+            font-size: 16px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tab:hover {
+            color: #FFC107;
+        }
+
+        .tab.active {
+            color: #FFC107;
+            border-bottom-color: #FFC107;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .policy-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.02));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .policy-section h3 {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .policy-section h4 {
+            font-size: 18px;
+            color: #FFC107;
+            margin: 25px 0 15px;
+        }
+
+        .policy-section p {
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .policy-section ul,
+        .policy-section ol {
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        .policy-section li {
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background-color: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #FFC107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box h4 {
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        .last-updated {
+            text-align: right;
+            color: #999;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .policy-section {
+                padding: 25px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: left;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">게임 정책</h1>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('terms')">이용약관</button>
+            <button class="tab" onclick="showTab('privacy')">개인정보처리방침</button>
+            <button class="tab" onclick="showTab('conduct')">행동 규칙</button>
+            <button class="tab" onclick="showTab('refund')">환불 정책</button>
+        </div>
+
+        <!-- Terms of Service -->
+        <div id="terms" class="tab-content active">
+            <div class="policy-section">
+                <h3>📜 이용약관</h3>
+                
+                <h4>제1조 (목적)</h4>
+                <p>
+                    본 약관은 NaNa GAMES(이하 "회사")가 제공하는 Project NaNa 게임 서비스(이하 "서비스")의 
+                    이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+                </p>
+
+                <h4>제2조 (약관의 효력 및 변경)</h4>
+                <ol>
+                    <li>본 약관은 서비스를 이용하고자 하는 모든 이용자에게 그 효력이 발생합니다.</li>
+                    <li>회사는 필요한 경우 관련 법령을 위배하지 않는 범위에서 본 약관을 변경할 수 있습니다.</li>
+                    <li>약관이 변경되는 경우 변경 사항을 시행일로부터 7일 전에 공지합니다.</li>
+                </ol>
+
+                <h4>제3조 (서비스의 제공)</h4>
+                <p>회사는 다음과 같은 서비스를 제공합니다:</p>
+                <ul>
+                    <li>게임 콘텐츠 이용 서비스</li>
+                    <li>게임 내 커뮤니티 서비스</li>
+                    <li>고객 지원 서비스</li>
+                    <li>기타 회사가 정하는 서비스</li>
+                </ul>
+
+                <h4>제4조 (계정 관리)</h4>
+                <ol>
+                    <li>이용자는 계정 정보를 타인에게 양도하거나 대여할 수 없습니다.</li>
+                    <li>이용자는 계정의 비밀번호를 타인이 알 수 없도록 관리해야 합니다.</li>
+                    <li>계정의 관리 소홀로 발생하는 손해는 이용자가 책임집니다.</li>
+                </ol>
+
+                <h4>제5조 (이용자의 의무)</h4>
+                <p>이용자는 다음 행위를 해서는 안 됩니다:</p>
+                <ul>
+                    <li>타인의 정보 도용</li>
+                    <li>서비스의 운영을 방해하는 행위</li>
+                    <li>부정한 방법으로 게임 내 재화를 획득하는 행위</li>
+                    <li>해킹, 바이러스 유포 등 시스템을 방해하는 행위</li>
+                    <li>타인에게 위해를 가하거나 불쾌감을 주는 행위</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>⚠️ 중요</h4>
+                    <p>
+                        본 약관을 위반하는 경우, 서비스 이용이 제한되거나 
+                        법적 책임을 질 수 있습니다.
+                    </p>
+                </div>
+
+                <p class="last-updated">최종 업데이트: 2024년 12월 1일</p>
+            </div>
+        </div>
+
+        <!-- Privacy Policy -->
+        <div id="privacy" class="tab-content">
+            <div class="policy-section">
+                <h3>🔒 개인정보처리방침</h3>
+
+                <h4>1. 수집하는 개인정보 항목</h4>
+                <p>회사는 서비스 제공을 위해 다음의 개인정보를 수집합니다:</p>
+                <ul>
+                    <li><strong>필수 항목:</strong> 이메일 주소, 비밀번호, 닉네임</li>
+                    <li><strong>선택 항목:</strong> 생년월일, 전화번호, 프로필 사진</li>
+                    <li><strong>자동 수집:</strong> IP 주소, 쿠키, 게임 플레이 기록, 접속 로그</li>
+                </ul>
+
+                <h4>2. 개인정보의 수집 및 이용 목적</h4>
+                <ul>
+                    <li>서비스 제공 및 계약 이행</li>
+                    <li>회원 관리 및 본인 확인</li>
+                    <li>부정 이용 방지 및 비인가 사용 방지</li>
+                    <li>서비스 개선 및 신규 서비스 개발</li>
+                    <li>맞춤형 서비스 제공</li>
+                    <li>이벤트 및 프로모션 정보 제공</li>
+                </ul>
+
+                <h4>3. 개인정보의 보유 및 이용 기간</h4>
+                <p>
+                    회사는 원칙적으로 개인정보 수집 및 이용 목적이 달성된 후에는 
+                    해당 정보를 지체 없이 파기합니다. 다만, 관련 법령에 따라 
+                    일정 기간 보관해야 하는 경우가 있습니다:
+                </p>
+                <ul>
+                    <li>계약 또는 청약철회 기록: 5년</li>
+                    <li>대금결제 및 재화 공급 기록: 5년</li>
+                    <li>소비자 불만 및 분쟁처리 기록: 3년</li>
+                    <li>접속 로그 기록: 3개월</li>
+                </ul>
+
+                <h4>4. 개인정보의 제3자 제공</h4>
+                <p>
+                    회사는 원칙적으로 이용자의 개인정보를 외부에 제공하지 않습니다. 
+                    다만, 다음의 경우에는 예외로 합니다:
+                </p>
+                <ul>
+                    <li>이용자가 사전에 동의한 경우</li>
+                    <li>법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 
+                        수사기관의 요구가 있는 경우</li>
+                </ul>
+
+                <h4>5. 이용자의 권리</h4>
+                <p>이용자는 언제든지 다음의 권리를 행사할 수 있습니다:</p>
+                <ul>
+                    <li>개인정보 열람 요구</li>
+                    <li>개인정보 정정 요구</li>
+                    <li>개인정보 삭제 요구</li>
+                    <li>개인정보 처리 정지 요구</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>💡 개인정보 보호</h4>
+                    <p>
+                        회사는 이용자의 개인정보를 안전하게 보호하기 위해 
+                        기술적·관리적 보호조치를 취하고 있습니다.
+                    </p>
+                </div>
+
+                <p class="last-updated">최종 업데이트: 2024년 12월 1일</p>
+            </div>
+        </div>
+
+        <!-- Code of Conduct -->
+        <div id="conduct" class="tab-content">
+            <div class="policy-section">
+                <h3>⚖️ 커뮤니티 행동 규칙</h3>
+
+                <h4>우리의 약속</h4>
+                <p>
+                    NaNa GAMES는 모든 플레이어가 안전하고 즐거운 환경에서 
+                    게임을 즐길 수 있도록 최선을 다하고 있습니다. 
+                    모든 이용자는 다음의 행동 규칙을 준수해야 합니다.
+                </p>
+
+                <h4>1. 금지되는 행위</h4>
+                
+                <p><strong>1.1 부정 행위</strong></p>
+                <ul>
+                    <li>치트, 핵, 매크로 등 부정 프로그램 사용</li>
+                    <li>버그 악용 및 익스플로잇</li>
+                    <li>게임 시스템을 우회하는 행위</li>
+                    <li>봇 또는 자동화 프로그램 사용</li>
+                </ul>
+
+                <p><strong>1.2 학대 및 괴롭힘</strong></p>
+                <ul>
+                    <li>욕설, 비방, 모욕적 언행</li>
+                    <li>성희롱, 성적 발언</li>
+                    <li>인종, 종교, 성별 등에 대한 차별적 발언</li>
+                    <li>타인에 대한 위협이나 괴롭힘</li>
+                    <li>의도적인 게임 방해 행위</li>
+                </ul>
+
+                <p><strong>1.3 사기 및 사칭</strong></p>
+                <ul>
+                    <li>타인의 계정 도용 또는 사칭</li>
+                    <li>운영진 사칭</li>
+                    <li>거짓 정보 유포</li>
+                    <li>게임 내 사기 행위</li>
+                </ul>
+
+                <p><strong>1.4 부적절한 콘텐츠</strong></p>
+                <ul>
+                    <li>선정적이거나 폭력적인 콘텐츠</li>
+                    <li>불법 콘텐츠 공유</li>
+                    <li>스팸 및 광고</li>
+                    <li>부적절한 닉네임, 길드명 사용</li>
+                </ul>
+
+                <h4>2. 제재 조치</h4>
+                <p>규칙 위반 시 다음과 같은 조치가 취해질 수 있습니다:</p>
+                <ul>
+                    <li><strong>경고:</strong> 첫 번째 경미한 위반</li>
+                    <li><strong>일시 정지:</strong> 1일 ~ 30일 (위반 정도에 따라)</li>
+                    <li><strong>영구 정지:</strong> 심각한 위반 또는 반복적인 위반</li>
+                    <li><strong>법적 조치:</strong> 불법 행위의 경우</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>🎮 공정한 플레이</h4>
+                    <p>
+                        모든 플레이어가 공정하고 즐거운 환경에서 게임할 수 있도록 
+                        여러분의 협조가 필요합니다. 위반 사항을 발견하면 
+                        게임 내 신고 기능을 이용해주세요.
+                    </p>
+                </div>
+
+                <h4>3. 신고 방법</h4>
+                <ul>
+                    <li>게임 내 신고 기능 사용</li>
+                    <li>공식 웹사이트를 통한 신고</li>
+                    <li>고객 지원팀에 이메일 신고</li>
+                </ul>
+
+                <p>
+                    신고된 내용은 검토 후 적절한 조치가 취해지며, 
+                    신고자의 정보는 보호됩니다.
+                </p>
+
+                <p class="last-updated">최종 업데이트: 2024년 12월 1일</p>
+            </div>
+        </div>
+
+        <!-- Refund Policy -->
+        <div id="refund" class="tab-content">
+            <div class="policy-section">
+                <h3>💰 환불 정책</h3>
+
+                <h4>1. 환불 가능 조건</h4>
+                <p>다음 조건을 모두 충족하는 경우 환불이 가능합니다:</p>
+                <ul>
+                    <li>구매 후 14일 이내</li>
+                    <li>플레이 시간 2시간 미만</li>
+                    <li>게임을 구매한 플랫폼의 환불 정책에 부합</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>⚠️ 주의사항</h4>
+                    <p>
+                        환불 조건은 구매한 플랫폼(Steam, Epic Games 등)의 
+                        정책을 따릅니다. 각 플랫폼의 환불 정책을 확인해주세요.
+                    </p>
+                </div>
+
+                <h4>2. 환불 불가 사항</h4>
+                <p>다음의 경우 환불이 불가능합니다:</p>
+                <ul>
+                    <li>구매 후 14일이 경과한 경우</li>
+                    <li>플레이 시간이 2시간을 초과한 경우</li>
+                    <li>게임 내 아이템 또는 화폐를 사용한 경우</li>
+                    <li>계정 제재로 인한 환불 요청</li>
+                    <li>단순 변심 (플랫폼 정책에 따라 상이)</li>
+                </ul>
+
+                <h4>3. 환불 신청 방법</h4>
+                <ol>
+                    <li>게임을 구매한 플랫폼(Steam, Epic Games 등)에 접속</li>
+                    <li>구매 내역에서 환불 요청</li>
+                    <li>환불 사유 선택 및 제출</li>
+                    <li>승인 시 원래 결제 수단으로 환불 (3-5영업일 소요)</li>
+                </ol>
+
+                <h4>4. 플랫폼별 환불 정책</h4>
+                <p><strong>Steam</strong></p>
+                <ul>
+                    <li>구매 후 14일 이내, 플레이 시간 2시간 미만 시 자동 승인</li>
+                    <li>환불 요청: Steam 클라이언트 또는 웹사이트</li>
+                </ul>
+
+                <p><strong>Epic Games Store</strong></p>
+                <ul>
+                    <li>구매 후 14일 이내, 실행 시간 2시간 미만</li>
+                    <li>환불 요청: Epic Games 계정 페이지</li>
+                </ul>
+
+                <p><strong>직접 구매 (공식 웹사이트)</strong></p>
+                <ul>
+                    <li>구매 후 14일 이내 문의</li>
+                    <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cbb8bebbbba4b9bf8ba5aaa5aaacaaa6aeb8e5a8a4a6">[email&#160;protected]</a>으로 환불 요청</li>
+                </ul>
+
+                <h4>5. DLC 및 확장팩 환불</h4>
+                <p>
+                    DLC와 확장팩도 본 게임과 동일한 환불 정책이 적용됩니다. 
+                    단, 본 게임을 환불하는 경우 함께 구매한 DLC도 함께 환불됩니다.
+                </p>
+
+                <h4>6. 게임 내 아이템 환불</h4>
+                <p>
+                    게임 내에서 구매한 아이템(스킨, 화폐 등)은 
+                    구매 후 24시간 이내, 미사용 상태일 경우에만 환불 가능합니다.
+                </p>
+
+                <div class="highlight-box">
+                    <h4>💡 환불 관련 문의</h4>
+                    <p>
+                        환불과 관련하여 문의사항이 있으시면 
+                        고객 지원팀(<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="15666065657a6761557b747b7472747870663b767a78">[email&#160;protected]</a>)으로 연락주시기 바랍니다.
+                    </p>
+                </div>
+
+                <p class="last-updated">최종 업데이트: 2024년 12월 1일</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 30px; background-color: rgba(255, 215, 0, 0.05); border: 1px solid #FFC107; border-radius: 12px; margin-top: 40px;">
+            <p style="color: #ccc; font-size: 15px;">
+                정책에 대한 질문이나 문의사항이 있으시면 
+                <a href="qna-contact.html" style="color: #FFC107; text-decoration: none;">고객 지원팀</a>에 
+                연락해주시기 바랍니다.
+            </p>
+        </div>
+    </main>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

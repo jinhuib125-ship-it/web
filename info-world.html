@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맵/세계관 설명 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .world-map {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .map-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: #FFC107;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-note {
+            font-size: 16px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .region-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .region-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .region-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .region-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .region-content {
+            padding: 25px;
+        }
+
+        .region-header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .region-name {
+            font-size: 24px;
+            color: #FFC107;
+            font-weight: bold;
+        }
+
+        .region-level {
+            background-color: rgba(255, 215, 0, 0.2);
+            color: #FFC107;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .region-description {
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .region-features {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .region-features span {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .lore-section {
+            background-color: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid #FFC107;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .lore-section h3 {
+            font-size: 28px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .lore-section p {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin-top: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #FFC107, rgba(255, 215, 0, 0.2));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background-color: #FFC107;
+            border-radius: 50%;
+            border: 3px solid #000;
+        }
+
+        .timeline-year {
+            font-size: 18px;
+            color: #FFC107;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .timeline-event {
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .region-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .world-map {
+                padding: 25px;
+            }
+
+            .map-container {
+                font-size: 60px;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">맵 / 세계관 설명</h1>
+
+        <div class="world-map">
+            <h2 style="font-size: 32px; color: #FFC107; margin-bottom: 20px;">에테리아 대륙 전체 지도</h2>
+            <div class="map-container">🗺️</div>
+            <p class="map-note">게임 내에서 인터랙티브 맵으로 확인할 수 있습니다</p>
+        </div>
+
+        <h2 style="font-size: 36px; color: #FFC107; margin-bottom: 30px; text-align: center;">주요 지역</h2>
+
+        <div class="region-grid">
+            <div class="region-card">
+                <div class="region-image">🏰</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">아르카디아 왕국</div>
+                        <div class="region-level">Lv. 1-10</div>
+                    </div>
+                    <div class="region-description">
+                        대륙의 중심에 위치한 인간 왕국. 번영하는 수도와 평화로운 마을들이 
+                        곳곳에 자리하고 있으며, 플레이어의 여정이 시작되는 곳입니다. 
+                        웅장한 성과 정원이 아름다운 도시입니다.
+                    </div>
+                    <div class="region-features">
+                        <span>🏘️ 5개 마을</span>
+                        <span>⚔️ 3개 던전</span>
+                        <span>🎯 퀘스트 다수</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🌲</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">엘린드의 숲</div>
+                        <div class="region-level">Lv. 5-15</div>
+                    </div>
+                    <div class="region-description">
+                        천년 수령의 나무들이 하늘을 가리는 고대의 숲. 엘프 부족이 거주하며 
+                        정령들의 노래가 울려 퍼집니다. 숨겨진 유적과 비밀 통로가 많아 
+                        탐험의 재미를 선사합니다.
+                    </div>
+                    <div class="region-features">
+                        <span>🏘️ 엘프 마을</span>
+                        <span>🌳 신성한 나무</span>
+                        <span>🦌 야생 동물</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🏔️</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">북부 빙하 지대</div>
+                        <div class="region-level">Lv. 15-25</div>
+                    </div>
+                    <div class="region-description">
+                        영원히 얼어붙은 땅. 눈보라가 끊임없이 몰아치며 극한의 추위가 지배합니다. 
+                        얼음 정령과 서리 거인이 배회하며, 고대 얼음 신전에는 
+                        전설의 유물이 봉인되어 있습니다.
+                    </div>
+                    <div class="region-features">
+                        <span>❄️ 얼음 신전</span>
+                        <span>⛰️ 설산 등반</span>
+                        <span>🐻 빙하 몬스터</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🏜️</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">황금 사막</div>
+                        <div class="region-level">Lv. 20-30</div>
+                    </div>
+                    <div class="region-description">
+                        끝없이 펼쳐진 모래 바다. 낮에는 작열하는 태양이, 밤에는 혹독한 추위가 
+                        모험가들을 시험합니다. 모래 속에 묻힌 고대 문명의 유적과 
+                        신비한 피라미드가 숨겨져 있습니다.
+                    </div>
+                    <div class="region-features">
+                        <span>🏛️ 고대 피라미드</span>
+                        <span>🐫 오아시스</span>
+                        <span>💎 보물 발굴</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🌊</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">심해 도시 아틀란</div>
+                        <div class="region-level">Lv. 25-35</div>
+                    </div>
+                    <div class="region-description">
+                        바다 깊숙이 가라앉은 고대 도시. 마법의 결계가 물을 막아주어 
+                        탐험이 가능합니다. 화려했던 과거의 흔적과 함께 심해 생물들이 
+                        새로운 주인이 되었습니다.
+                    </div>
+                    <div class="region-features">
+                        <span>🏛️ 수중 궁전</span>
+                        <span>🐟 심해 생물</span>
+                        <span>💎 진주 채집</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🌋</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">화염산맥</div>
+                        <div class="region-level">Lv. 30-40</div>
+                    </div>
+                    <div class="region-description">
+                        끊임없이 분출하는 활화산들이 늘어선 험준한 산맥. 
+                        용암이 흐르는 강과 불의 정령들이 서식하는 위험한 지역이지만, 
+                        희귀한 광물과 강력한 장비를 얻을 수 있습니다.
+                    </div>
+                    <div class="region-features">
+                        <span>🔥 화산 던전</span>
+                        <span>⛏️ 희귀 광물</span>
+                        <span>🐉 화염 드래곤</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🏰</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">어둠의 성역</div>
+                        <div class="region-level">Lv. 40-50</div>
+                    </div>
+                    <div class="region-description">
+                        차원의 틈 너머에 존재하는 어둠의 군주의 본거지. 
+                        빛이 완전히 차단된 이곳은 강력한 마력으로 뒤틀려 있으며, 
+                        최강의 적들이 기다리고 있습니다. 모든 것의 종착지입니다.
+                    </div>
+                    <div class="region-features">
+                        <span>👹 최종 보스</span>
+                        <span>⚔️ 전설 장비</span>
+                        <span>🎯 엔딩 분기</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card">
+                <div class="region-image">🌃</div>
+                <div class="region-content">
+                    <div class="region-header">
+                        <div class="region-name">자유 도시 노바</div>
+                        <div class="region-level">모든 레벨</div>
+                    </div>
+                    <div class="region-description">
+                        대륙의 무역 중심지. 다양한 종족이 모여 사는 국제 도시로, 
+                        경매장, 투기장, 길드 본부 등이 위치해 있습니다. 
+                        플레이어들이 가장 많이 모이는 허브 도시입니다.
+                    </div>
+                    <div class="region-features">
+                        <span>🏪 상점가</span>
+                        <span>⚔️ PvP 아레나</span>
+                        <span>🏛️ 길드 홀</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lore-section">
+            <h3>📜 에테리아 대륙의 역사</h3>
+            <p>
+                에테리아는 신화 시대부터 존재해온 고대의 땅입니다. 
+                전설에 따르면 이 세계는 빛의 신과 어둠의 신이 함께 창조했으며, 
+                두 신의 힘이 균형을 이루며 세상은 번영했습니다.
+            </p>
+            <p>
+                하지만 어둠의 신이 더 많은 권력을 원하며 배신하자, 
+                빛의 신은 자신의 모든 힘을 쏟아 어둠의 신을 차원의 틈 너머로 추방했습니다. 
+                이 전투로 신들은 사라졌고, 그들의 힘은 대륙 곳곳에 흩어져 
+                유물의 형태로 남게 되었습니다.
+            </p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">기원전 3000년 - 신화 시대</div>
+                    <div class="timeline-event">
+                        빛과 어둠의 신이 에테리아를 창조. 다양한 종족들이 탄생하고 
+                        마법과 과학이 발전하기 시작함.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">기원전 2000년 - 신들의 전쟁</div>
+                    <div class="timeline-event">
+                        어둠의 신의 배신으로 신들의 전쟁 발발. 빛의 신이 승리하지만 
+                        양쪽 모두 소멸. 대륙의 30%가 황폐화됨.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">기원전 1000년 - 고대 왕국 시대</div>
+                    <div class="timeline-event">
+                        인간, 엘프, 드워프 등이 각자의 왕국을 세움. 
+                        마법과 기술의 황금기. 아틀란 수중 도시 건설.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">0년 - 어둠의 침공</div>
+                    <div class="timeline-event">
+                        차원의 틈에서 어둠의 군주 출현. 대륙의 절반을 점령하며 
+                        수많은 왕국이 멸망. 아틀란 도시가 바다에 가라앉음.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">5년 - 영웅들의 봉인</div>
+                    <div class="timeline-event">
+                        각 종족의 영웅들이 연합하여 어둠의 군주를 봉인. 
+                        영웅들은 봉인을 유지하기 위해 자신의 생명을 바침.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">5-1000년 - 재건의 시대</div>
+                    <div class="timeline-event">
+                        생존자들이 새로운 왕국들을 건설. 아르카디아 왕국 건국. 
+                        서서히 평화와 번영을 되찾아가지만, 과거의 영광은 잃어버림.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">1000년 (현재) - 봉인의 약화</div>
+                    <div class="timeline-event">
+                        봉인이 약해지며 어둠의 힘이 다시 깨어나기 시작. 
+                        각지에서 괴물 출몰과 이상 현상 발생. 
+                        세 영웅(아리아, 카엘, 제론)의 여정 시작.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border: 1px solid #FFC107; border-radius: 12px;">
+            <h3 style="color: #FFC107; font-size: 24px; margin-bottom: 20px;">방대한 세계를 직접 탐험하세요</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                에테리아 대륙의 구석구석을 여행하며 숨겨진 비밀을 발견하세요!
+            </p>
+            <button style="background-color: #FFC107; color: #000; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                    onclick="location.href='download.html'">
+                지금 모험 시작하기 →
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

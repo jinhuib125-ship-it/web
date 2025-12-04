@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>버그 제보 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .intro-section p {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #FFC107;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-group .required {
+            color: #FF4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #FFC107;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-button {
+            background-color: rgba(255, 215, 0, 0.1);
+            border: 1px solid #FFC107;
+            color: #FFC107;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-button:hover {
+            background-color: rgba(255, 215, 0, 0.2);
+        }
+
+        .file-name {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .submit-button {
+            background-color: #FFC107;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background-color: #FFA500;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .guidelines {
+            background-color: rgba(76, 175, 80, 0.05);
+            border-left: 4px solid #4CAF50;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .guidelines h3 {
+            color: #4CAF50;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .guidelines ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .guidelines li {
+            color: #ccc;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .guidelines li::before {
+            content: '✓';
+            color: #4CAF50;
+            position: absolute;
+            left: -20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">버그 제보</h1>
+
+        <div class="intro-section">
+            <p>
+                게임을 개선하는 데 도움을 주셔서 감사합니다!<br>
+                발견하신 버그나 문제점을 자세히 설명해주시면 빠르게 수정하겠습니다.
+            </p>
+        </div>
+
+        <div class="guidelines">
+            <h3>버그 제보 가이드라인</h3>
+            <ul>
+                <li>가능한 한 자세하고 구체적으로 작성해주세요</li>
+                <li>버그가 발생한 상황과 재현 방법을 단계별로 설명해주세요</li>
+                <li>스크린샷이나 동영상이 있으면 큰 도움이 됩니다</li>
+                <li>게임 버전, 운영체제, 하드웨어 정보를 정확히 기입해주세요</li>
+                <li>욕설이나 비방은 삼가주시기 바랍니다</li>
+            </ul>
+        </div>
+
+        <div class="form-container">
+            <form id="bugReportForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label>
+                        이름 <span class="required">*</span>
+                    </label>
+                    <input type="text" name="name" required placeholder="이름을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        이메일 <span class="required">*</span>
+                    </label>
+                    <input type="email" name="email" required placeholder="example@email.com">
+                    <div class="help-text">답변을 받으실 이메일 주소입니다</div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        버그 유형 <span class="required">*</span>
+                    </label>
+                    <select name="bugType" required>
+                        <option value="">선택하세요</option>
+                        <option value="crash">게임 크래시</option>
+                        <option value="graphics">그래픽 문제</option>
+                        <option value="audio">사운드 문제</option>
+                        <option value="gameplay">게임플레이 버그</option>
+                        <option value="ui">UI/UX 문제</option>
+                        <option value="performance">성능 문제</option>
+                        <option value="multiplayer">멀티플레이어 문제</option>
+                        <option value="other">기타</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        심각도 <span class="required">*</span>
+                    </label>
+                    <select name="severity" required>
+                        <option value="">선택하세요</option>
+                        <option value="critical">치명적 (게임 플레이 불가)</option>
+                        <option value="major">주요 (게임 진행에 큰 지장)</option>
+                        <option value="minor">경미 (불편하지만 진행 가능)</option>
+                        <option value="trivial">사소함 (시각적 문제 등)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        플랫폼 <span class="required">*</span>
+                    </label>
+                    <select name="platform" required>
+                        <option value="">선택하세요</option>
+                        <option value="windows">Windows</option>
+                        <option value="macos">macOS</option>
+                        <option value="linux">Linux</option>
+                        <option value="ios">iOS</option>
+                        <option value="android">Android</option>
+                        <option value="web">웹 브라우저</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        게임 버전 <span class="required">*</span>
+                    </label>
+                    <input type="text" name="version" required placeholder="예: v1.5.2">
+                    <div class="help-text">메인 메뉴 우측 하단에서 확인할 수 있습니다</div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        버그 제목 <span class="required">*</span>
+                    </label>
+                    <input type="text" name="title" required placeholder="버그를 간단히 요약해주세요">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        상세 설명 <span class="required">*</span>
+                    </label>
+                    <textarea name="description" required placeholder="버그가 발생한 상황, 재현 방법, 예상 동작과 실제 동작 등을 자세히 설명해주세요.
+
+예시:
+1. 게임을 시작하고 챕터 3로 이동
+2. 보스와 전투 시작
+3. 특정 스킬(Q) 사용 시 게임이 멈춤
+4. 예상: 스킬이 정상 작동
+5. 실제: 게임이 응답 없음 상태가 됨"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>시스템 정보</label>
+                    <textarea name="systemInfo" placeholder="운영체제, CPU, GPU, RAM 등의 시스템 정보를 입력해주세요 (선택사항)
+
+예시:
+- OS: Windows 11 64-bit
+- CPU: Intel Core i7-9700K
+- GPU: NVIDIA RTX 3060 Ti
+- RAM: 16GB"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>스크린샷 / 동영상</label>
+                    <div class="file-upload">
+                        <label for="fileInput" class="file-upload-button">파일 선택</label>
+                        <input type="file" id="fileInput" name="attachment" accept="image/*,video/*" onchange="updateFileName(this)">
+                        <span class="file-name" id="fileName">선택된 파일 없음</span>
+                    </div>
+                    <div class="help-text">이미지 또는 동영상 파일 (최대 10MB)</div>
+                </div>
+
+                <button type="submit" class="submit-button">버그 제보하기</button>
+            </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background-color: rgba(255, 215, 0, 0.05); border-radius: 8px;">
+            <p style="color: #ccc; font-size: 14px; line-height: 1.8;">
+                제보해주신 버그는 개발팀이 검토 후 빠르게 처리하겠습니다.<br>
+                일반적으로 1-3일 내에 이메일로 답변드립니다.<br>
+                긴급한 문제의 경우 더 빠르게 대응하고 있습니다.
+            </p>
+        </div>
+    </main>
+
+    <script>
+        function updateFileName(input) {
+            const fileName = document.getElementById('fileName');
+            if (input.files.length > 0) {
+                fileName.textContent = input.files[0].name;
+            } else {
+                fileName.textContent = '선택된 파일 없음';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // 실제로는 서버로 데이터를 전송하는 로직이 들어가야 함
+            alert('버그 제보가 접수되었습니다!\n\n소중한 제보 감사합니다.\n입력하신 이메일로 확인 메일을 발송했습니다.\n개발팀이 빠르게 검토하여 답변드리겠습니다.');
+            
+            // 폼 초기화
+            document.getElementById('bugReportForm').reset();
+            document.getElementById('fileName').textContent = '선택된 파일 없음';
+        }
+    </script>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

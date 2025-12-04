@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>권장 사양 / 최소 사양 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 60px;
+            line-height: 1.8;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .requirements-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 12px;
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .requirements-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .requirements-card.recommended {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+        }
+
+        .requirements-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .requirements-header h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        .requirements-card.recommended h2 {
+            color: #4CAF50;
+        }
+
+        .requirements-header p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .requirement-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .requirement-item:hover {
+            background-color: rgba(255, 215, 0, 0.05);
+            transform: translateX(5px);
+        }
+
+        .requirement-label {
+            font-size: 14px;
+            color: #FFC107;
+            font-weight: bold;
+            min-width: 120px;
+            margin-right: 20px;
+        }
+
+        .requirement-value {
+            font-size: 14px;
+            color: #fff;
+            flex: 1;
+        }
+
+        .platform-section {
+            margin-bottom: 60px;
+        }
+
+        .platform-section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .notice-box {
+            background-color: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid #FFC107;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+
+        .notice-box h3 {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .notice-box ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .notice-box li {
+            color: #ccc;
+            margin-bottom: 12px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .notice-box li::before {
+            content: '💡';
+            position: absolute;
+            left: -25px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background-color: rgba(255, 215, 0, 0.2);
+            color: #FFC107;
+            padding: 15px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            color: #ccc;
+        }
+
+        .comparison-table tr:hover {
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+
+            .requirement-item {
+                flex-direction: column;
+            }
+
+            .requirement-label {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">시스템 요구사항</h1>
+
+        <p class="intro-text">
+            Project NaNa를 원활하게 즐기기 위한 시스템 요구사항입니다.<br>
+            최적의 게임 경험을 위해 권장 사양 이상을 추천드립니다.
+        </p>
+
+        <div class="platform-section">
+            <h2>🖥️ PC (Windows)</h2>
+            
+            <div class="requirements-grid">
+                <div class="requirements-card">
+                    <div class="requirements-header">
+                        <h2>최소 사양</h2>
+                        <p>게임 실행 가능 (30 FPS, 낮음 옵션)</p>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">운영체제</div>
+                        <div class="requirement-value">Windows 10 64-bit</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">프로세서</div>
+                        <div class="requirement-value">Intel Core i5-6600K / AMD Ryzen 5 1600</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">메모리</div>
+                        <div class="requirement-value">8 GB RAM</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">그래픽</div>
+                        <div class="requirement-value">NVIDIA GTX 1060 6GB / AMD RX 580 8GB</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">DirectX</div>
+                        <div class="requirement-value">Version 11</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">저장공간</div>
+                        <div class="requirement-value">30 GB 사용 가능 공간</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">네트워크</div>
+                        <div class="requirement-value">광대역 인터넷 연결</div>
+                    </div>
+                </div>
+
+                <div class="requirements-card recommended">
+                    <div class="requirements-header">
+                        <h2>권장 사양</h2>
+                        <p>최적의 경험 (60+ FPS, 높음 옵션)</p>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">운영체제</div>
+                        <div class="requirement-value">Windows 11 64-bit</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">프로세서</div>
+                        <div class="requirement-value">Intel Core i7-9700K / AMD Ryzen 7 3700X</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">메모리</div>
+                        <div class="requirement-value">16 GB RAM</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">그래픽</div>
+                        <div class="requirement-value">NVIDIA RTX 3060 Ti / AMD RX 6700 XT</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">DirectX</div>
+                        <div class="requirement-value">Version 12</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">저장공간</div>
+                        <div class="requirement-value">50 GB SSD</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">네트워크</div>
+                        <div class="requirement-value">광대역 인터넷 연결</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="platform-section">
+            <h2>🍎 macOS</h2>
+            
+            <div class="requirements-grid">
+                <div class="requirements-card">
+                    <div class="requirements-header">
+                        <h2>최소 사양</h2>
+                        <p>게임 실행 가능</p>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">운영체제</div>
+                        <div class="requirement-value">macOS 11.0 (Big Sur)</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">프로세서</div>
+                        <div class="requirement-value">Intel Core i5 또는 Apple M1</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">메모리</div>
+                        <div class="requirement-value">8 GB RAM</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">그래픽</div>
+                        <div class="requirement-value">Metal 지원 GPU</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">저장공간</div>
+                        <div class="requirement-value">35 GB 사용 가능 공간</div>
+                    </div>
+                </div>
+
+                <div class="requirements-card recommended">
+                    <div class="requirements-header">
+                        <h2>권장 사양</h2>
+                        <p>최적의 경험</p>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">운영체제</div>
+                        <div class="requirement-value">macOS 14.0 (Sonoma)</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">프로세서</div>
+                        <div class="requirement-value">Apple M2 Pro / M3</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">메모리</div>
+                        <div class="requirement-value">16 GB RAM</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">그래픽</div>
+                        <div class="requirement-value">Metal 3 지원 GPU</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">저장공간</div>
+                        <div class="requirement-value">50 GB SSD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="platform-section">
+            <h2>🐧 Linux</h2>
+            
+            <div class="requirements-grid">
+                <div class="requirements-card">
+                    <div class="requirements-header">
+                        <h2>최소 사양</h2>
+                        <p>게임 실행 가능</p>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">배포판</div>
+                        <div class="requirement-value">Ubuntu 20.04 / Fedora 34 이상</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">프로세서</div>
+                        <div class="requirement-value">Intel Core i5-6600K / AMD Ryzen 5 1600</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">메모리</div>
+                        <div class="requirement-value">8 GB RAM</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">그래픽</div>
+                        <div class="requirement-value">Vulkan 1.2 지원 GPU</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">저장공간</div>
+                        <div class="requirement-value">30 GB 사용 가능 공간</div>
+                    </div>
+                </div>
+
+                <div class="requirements-card recommended">
+                    <div class="requirements-header">
+                        <h2>권장 사양</h2>
+                        <p>최적의 경험</p>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">배포판</div>
+                        <div class="requirement-value">Ubuntu 22.04 / Fedora 38 이상</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">프로세서</div>
+                        <div class="requirement-value">Intel Core i7-9700K / AMD Ryzen 7 3700X</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">메모리</div>
+                        <div class="requirement-value">16 GB RAM</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">그래픽</div>
+                        <div class="requirement-value">Vulkan 1.3 지원 GPU</div>
+                    </div>
+                    
+                    <div class="requirement-item">
+                        <div class="requirement-label">저장공간</div>
+                        <div class="requirement-value">50 GB SSD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <h3>💡 성능 최적화 팁</h3>
+            <ul>
+                <li>SSD 사용 시 로딩 시간이 크게 단축됩니다.</li>
+                <li>최신 그래픽 드라이버를 설치하면 성능이 향상됩니다.</li>
+                <li>백그라운드 프로그램을 종료하면 게임 성능이 개선됩니다.</li>
+                <li>권장 사양 이상에서 레이트레이싱 옵션을 활성화할 수 있습니다.</li>
+                <li>4K 해상도로 플레이하려면 RTX 4070 / RX 7800 XT 이상을 권장합니다.</li>
+            </ul>
+        </div>
+
+        <div class="notice-box" style="margin-top: 30px; border-left-color: #FF9800;">
+            <h3 style="color: #FF9800;">⚠️ 주의사항</h3>
+            <ul>
+                <li style="color: #ccc;">노트북의 경우 동급 데스크톱보다 성능이 낮을 수 있습니다.</li>
+                <li style="color: #ccc;">통합 그래픽 (Intel HD Graphics 등)으로는 원활한 플레이가 어렵습니다.</li>
+                <li style="color: #ccc;">멀티플레이 모드는 추가로 2GB의 RAM이 필요합니다.</li>
+                <li style="color: #ccc;">VR 모드는 별도의 요구사항이 있으니 추후 공지를 참고해주세요.</li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

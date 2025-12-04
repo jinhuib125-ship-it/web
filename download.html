@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최신 버전 다운로드 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .download-hero {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .version-info {
+            font-size: 28px;
+            color: #FFC107;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background-color: #FFC107;
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .download-button {
+            background-color: #FFC107;
+            color: #000;
+            border: none;
+            padding: 20px 60px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .download-button:hover {
+            background-color: #FFA500;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .download-button.secondary {
+            background-color: transparent;
+            border: 2px solid #FFC107;
+            color: #FFC107;
+        }
+
+        .download-button.secondary:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .file-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .file-info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .file-info-item .label {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+
+        .file-info-item .value {
+            font-size: 20px;
+            color: #FFC107;
+            font-weight: bold;
+        }
+
+        .platforms-section {
+            margin-bottom: 60px;
+        }
+
+        .platforms-section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .platform-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .platform-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .platform-card h3 {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 15px;
+        }
+
+        .platform-card p {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .platform-card .size {
+            font-size: 16px;
+            color: #FFA500;
+            margin-bottom: 20px;
+        }
+
+        .notice-section {
+            background-color: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid #FFC107;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 60px;
+        }
+
+        .notice-section h3 {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .notice-section ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .notice-section li {
+            color: #ccc;
+            margin-bottom: 10px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .notice-section li::before {
+            content: '⚠';
+            color: #FFC107;
+            position: absolute;
+            left: -20px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .download-hero {
+                padding: 40px 20px;
+            }
+
+            .download-button {
+                padding: 15px 40px;
+                font-size: 18px;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">최신 버전 다운로드</h1>
+
+        <div class="download-hero">
+            <div class="version-info">Project NaNa v1.5.2</div>
+            <div class="version-badge">최신 안정 버전</div>
+            <p style="color: #ccc; font-size: 18px; margin-bottom: 40px;">
+                출시일: 2024년 12월 1일<br>
+                새로운 콘텐츠와 개선사항이 포함되어 있습니다.
+            </p>
+            <div>
+                <button class="download-button" onclick="alert('다운로드가 곧 시작됩니다!')">
+                    💾 지금 다운로드
+                </button>
+                <button class="download-button secondary" onclick="location.href='versions.html'">
+                    📋 이전 버전 보기
+                </button>
+            </div>
+            <div class="file-info">
+                <div class="file-info-item">
+                    <div class="label">파일 크기</div>
+                    <div class="value">15.7 GB</div>
+                </div>
+                <div class="file-info-item">
+                    <div class="label">다운로드 수</div>
+                    <div class="value">152,847</div>
+                </div>
+                <div class="file-info-item">
+                    <div class="label">평균 평점</div>
+                    <div class="value">★ 4.8 / 5.0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="platforms-section">
+            <h2>플랫폼별 다운로드</h2>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <div class="platform-icon">🖥️</div>
+                    <h3>Windows</h3>
+                    <p>Windows 10 이상 지원</p>
+                    <div class="size">파일 크기: 15.7 GB</div>
+                    <button class="download-button" style="font-size: 16px; padding: 12px 30px;" 
+                            onclick="alert('Windows 버전 다운로드가 시작됩니다!')">
+                        다운로드
+                    </button>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-icon">🍎</div>
+                    <h3>macOS</h3>
+                    <p>macOS 11.0 (Big Sur) 이상 지원</p>
+                    <div class="size">파일 크기: 16.2 GB</div>
+                    <button class="download-button" style="font-size: 16px; padding: 12px 30px;" 
+                            onclick="alert('macOS 버전 다운로드가 시작됩니다!')">
+                        다운로드
+                    </button>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-icon">🐧</div>
+                    <h3>Linux</h3>
+                    <p>Ubuntu 20.04 / Fedora 34 이상</p>
+                    <div class="size">파일 크기: 15.3 GB</div>
+                    <button class="download-button" style="font-size: 16px; padding: 12px 30px;" 
+                            onclick="alert('Linux 버전 다운로드가 시작됩니다!')">
+                        다운로드
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice-section">
+            <h3>⚠️ 다운로드 전 확인사항</h3>
+            <ul>
+                <li>다운로드하기 전에 시스템 요구사항을 확인해주세요. <a href="requirements.html" style="color: #FFC107;">요구사항 보기</a></li>
+                <li>설치에는 약 30GB의 여유 공간이 필요합니다.</li>
+                <li>다운로드 속도는 인터넷 연결 상태에 따라 달라질 수 있습니다.</li>
+                <li>다운로드가 중단된 경우, 다시 시도하면 이어받기가 가능합니다.</li>
+                <li>바이러스 백신 소프트웨어가 설치를 방해할 수 있습니다. 설치 중 임시로 비활성화해주세요.</li>
+                <li>자세한 설치 방법은 <a href="install.html" style="color: #FFC107;">설치 가이드</a>를 참고해주세요.</li>
+            </ul>
+        </div>
+
+        <div class="notice-section" style="margin-top: 30px; border-left-color: #4CAF50;">
+            <h3 style="color: #4CAF50;">✨ v1.5.2 주요 업데이트 내용</h3>
+            <ul>
+                <li style="color: #ccc;">새로운 스토리 챕터 "어둠의 성역" 추가</li>
+                <li style="color: #ccc;">3명의 신규 플레이어블 캐릭터 추가</li>
+                <li style="color: #ccc;">전투 시스템 개선 및 밸런스 조정</li>
+                <li style="color: #ccc;">100개 이상의 버그 수정 및 안정성 개선</li>
+                <li style="color: #ccc;">그래픽 최적화로 프레임레이트 향상</li>
+                <li style="color: #ccc;">자세한 내용은 <a href="patch.html" style="color: #4CAF50;">패치 노트</a>를 확인하세요.</li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

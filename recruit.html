@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채용 안내 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .recruit-hero {
+            text-align: center;
+            font-size: 20px;
+            color: #ccc;
+            margin-bottom: 60px;
+            line-height: 1.8;
+        }
+
+        .recruit-hero strong {
+            color: #FFC107;
+        }
+
+        .benefits-section {
+            margin-bottom: 80px;
+        }
+
+        .benefits-section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .benefit-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-card h3 {
+            font-size: 20px;
+            color: #FFC107;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card p {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .positions-section {
+            margin-bottom: 80px;
+        }
+
+        .positions-section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .position-card {
+            background-color: rgba(255, 215, 0, 0.05);
+            border-left: 4px solid #FFC107;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .position-card:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            transform: translateX(10px);
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .position-title {
+            font-size: 24px;
+            color: #FFC107;
+        }
+
+        .position-badge {
+            background-color: #FFC107;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .position-details {
+            margin-bottom: 20px;
+        }
+
+        .position-details h4 {
+            color: #FFA500;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .position-details ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .position-details li {
+            color: #ccc;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .position-details li::before {
+            content: '▹';
+            color: #FFC107;
+            position: absolute;
+            left: -20px;
+        }
+
+        .apply-button {
+            background-color: #FFC107;
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-button:hover {
+            background-color: #FFA500;
+            transform: scale(1.05);
+        }
+
+        .application-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), transparent);
+            border: 2px solid #FFC107;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .application-section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .application-section p {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .contact-info {
+            font-size: 20px;
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .position-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="#download">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="#latest">최신 버전 다운로드</a>
+                <a href="#versions">이전 버전 / 히스토리</a>
+                <a href="#requirements">권장 사양 / 최소 사양</a>
+                <a href="#install">설치 가이드</a>
+                <a href="#patch">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">채용 안내</h1>
+
+        <div class="recruit-hero">
+            <strong>NaNa GAMES에서 함께 미래를 만들어갈 인재를 찾습니다!</strong><br><br>
+            우리는 게임에 대한 열정과 창의성을 가진 분들을 환영합니다.<br>
+            경험도 중요하지만, 배우려는 의지와 팀워크를 더욱 중요하게 생각합니다.
+        </div>
+
+        <div class="benefits-section">
+            <h2>복리후생</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>경쟁력 있는 연봉</h3>
+                    <p>업계 최상위 수준의 연봉과 성과급 제도를 운영하고 있습니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">⏰</div>
+                    <h3>유연 근무제</h3>
+                    <p>출퇴근 시간을 자유롭게 선택할 수 있는 유연 근무제를 실시합니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏠</div>
+                    <h3>재택근무</h3>
+                    <p>주 2회 재택근무 가능하며, 팀 상황에 따라 조정 가능합니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎮</div>
+                    <h3>게임 구입 지원</h3>
+                    <p>연 300만원 한도 내에서 게임 구입비를 지원합니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📚</div>
+                    <h3>교육 지원</h3>
+                    <p>컨퍼런스, 세미나, 온라인 강의 등 자기계발을 적극 지원합니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏖️</div>
+                    <h3>연차 및 휴가</h3>
+                    <p>법정 연차 외에 추가 휴가와 리프레시 휴가를 제공합니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🍕</div>
+                    <h3>식사 및 간식</h3>
+                    <p>점심 식대 지원 및 사무실 내 다양한 간식과 음료를 제공합니다.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">💻</div>
+                    <h3>최신 장비</h3>
+                    <p>최신 사양의 개발 장비를 제공하며, 선호하는 기기를 선택할 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="positions-section">
+            <h2>채용 포지션</h2>
+
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-title">게임 클라이언트 프로그래머</div>
+                    <div class="position-badge">경력 3년 이상</div>
+                </div>
+                <div class="position-details">
+                    <h4>주요 업무</h4>
+                    <ul>
+                        <li>Unity 또는 Unreal Engine을 활용한 게임 클라이언트 개발</li>
+                        <li>게임 시스템 설계 및 구현</li>
+                        <li>UI/UX 구현 및 최적화</li>
+                    </ul>
+                </div>
+                <div class="position-details">
+                    <h4>자격 요건</h4>
+                    <ul>
+                        <li>C++, C# 중 하나 이상 능숙하게 사용 가능</li>
+                        <li>게임 엔진 사용 경험</li>
+                        <li>출시 게임 개발 경험</li>
+                    </ul>
+                </div>
+                <button class="apply-button" onclick="applyForPosition('game-developer')">지원하기</button>
+            </div>
+
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-title">게임 서버 프로그래머</div>
+                    <div class="position-badge">경력 2년 이상</div>
+                </div>
+                <div class="position-details">
+                    <h4>주요 업무</h4>
+                    <ul>
+                        <li>게임 서버 아키텍처 설계 및 개발</li>
+                        <li>실시간 멀티플레이어 시스템 구현</li>
+                        <li>서버 성능 최적화 및 모니터링</li>
+                    </ul>
+                </div>
+                <div class="position-details">
+                    <h4>자격 요건</h4>
+                    <ul>
+                        <li>Node.js, Go, Java 중 하나 이상 사용 경험</li>
+                        <li>데이터베이스 설계 및 최적화 경험</li>
+                        <li>클라우드 서비스(AWS, GCP 등) 사용 경험</li>
+                    </ul>
+                </div>
+                <button class="apply-button" onclick="applyForPosition('game-designer')">지원하기</button>
+            </div>
+
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-title">3D 캐릭터 아티스트</div>
+                    <div class="position-badge">경력 무관</div>
+                </div>
+                <div class="position-details">
+                    <h4>주요 업무</h4>
+                    <ul>
+                        <li>게임 캐릭터 3D 모델링 및 텍스처링</li>
+                        <li>캐릭터 리깅 및 애니메이션 작업</li>
+                        <li>아트 디렉터와 협업하여 일관된 아트 스타일 유지</li>
+                    </ul>
+                </div>
+                <div class="position-details">
+                    <h4>자격 요건</h4>
+                    <ul>
+                        <li>Maya, Blender, 3ds Max 중 하나 이상 능숙하게 사용</li>
+                        <li>ZBrush 또는 Substance Painter 경험</li>
+                        <li>포트폴리오 제출 필수</li>
+                    </ul>
+                </div>
+                <button class="apply-button" onclick="applyForPosition('artist')">지원하기</button>
+            </div>
+
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-title">게임 디자이너</div>
+                    <div class="position-badge">경력 2년 이상</div>
+                </div>
+                <div class="position-details">
+                    <h4>주요 업무</h4>
+                    <ul>
+                        <li>게임 시스템 및 콘텐츠 기획</li>
+                        <li>레벨 디자인 및 밸런싱</li>
+                        <li>게임 데이터 관리 및 분석</li>
+                    </ul>
+                </div>
+                <div class="position-details">
+                    <h4>자격 요건</h4>
+                    <ul>
+                        <li>게임 기획 및 디자인 경험</li>
+                        <li>다양한 게임 장르에 대한 이해</li>
+                        <li>데이터 분석 및 문서 작성 능력</li>
+                    </ul>
+                </div>
+                <button class="apply-button" onclick="applyForPosition('sound-designer')">지원하기</button>
+            </div>
+
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-title">QA 엔지니어</div>
+                    <div class="position-badge">신입 가능</div>
+                </div>
+                <div class="position-details">
+                    <h4>주요 업무</h4>
+                    <ul>
+                        <li>게임 테스트 및 버그 리포팅</li>
+                        <li>테스트 케이스 작성 및 관리</li>
+                        <li>개발팀과 협업하여 품질 개선</li>
+                    </ul>
+                </div>
+                <div class="position-details">
+                    <h4>자격 요건</h4>
+                    <ul>
+                        <li>게임에 대한 열정과 이해</li>
+                        <li>꼼꼼하고 체계적인 성격</li>
+                        <li>커뮤니케이션 능력</li>
+                    </ul>
+                </div>
+                <button class="apply-button" onclick="applyForPosition('qa-tester')">지원하기</button>
+            </div>
+        </div>
+
+        <div class="application-section">
+            <h2>지원 방법</h2>
+            <p>
+                관심 있는 포지션에 지원하시려면 아래 이메일로 이력서와 포트폴리오를 보내주세요.<br>
+                (아티스트의 경우 포트폴리오 필수)
+            </p>
+            <div class="contact-info">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c9bbacaabbbca0bd89a7a8a7a8aea8a4acbae7aaa6a4">[email&#160;protected]</a></div>
+            <p style="margin-top: 20px; font-size: 16px;">
+                서류 전형 합격자에 한해 개별 연락드립니다.<
+
+    
+    <script>
+        function applyForPosition(positionId) {
+            // localStorage에서 지원 내역 가져오기
+            let applications = JSON.parse(localStorage.getItem('jobApplications')) || [];
+            
+            // 이미 지원했는지 확인
+            if (applications.includes(positionId)) {
+                alert('이미 지원한 항목입니다.');
+                return;
+            }
+            
+            // 지원 내역에 추가
+            applications.push(positionId);
+            localStorage.setItem('jobApplications', JSON.stringify(applications));
+            
+            alert('성공적으로 지원 완료됐습니다!');
+        }
+    </script>
+
+<script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

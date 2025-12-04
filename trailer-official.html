@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공식 트레일러 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .featured-video {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid #FFC107;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 60px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-placeholder:hover {
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+
+        .play-icon {
+            font-size: 80px;
+            color: #FFC107;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-title {
+            font-size: 28px;
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 30px;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .video-description {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .video-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .video-card .thumbnail {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            overflow: hidden;
+        }
+
+        .video-card .thumbnail-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-card .thumbnail-icon {
+            font-size: 60px;
+            color: #FFC107;
+        }
+
+        .video-card .duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #FFC107;
+        }
+
+        .video-card .content {
+            padding: 20px;
+        }
+
+        .video-card .title {
+            font-size: 18px;
+            color: #FFC107;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .video-card .date {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .video-card .views {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">공식 트레일러</h1>
+
+        <div class="featured-video">
+            <div class="video-container">
+                <div class="video-placeholder" onclick="alert('영상 재생 기능은 실제 환경에서 구현됩니다')">
+                    <div class="play-icon">▶</div>
+                    <p style="color: #FFC107; font-size: 20px;">출시 트레일러 재생</p>
+                </div>
+            </div>
+            <div class="video-info">
+                <div class="video-title">Project NaNa - 공식 출시 트레일러</div>
+                <div class="video-meta">
+                    <span>📅 2024년 12월 1일</span>
+                    <span>👁️ 1,247,583 조회</span>
+                    <span>⏱️ 2:47</span>
+                    <span>🎬 4K UHD</span>
+                </div>
+                <div class="video-description">
+                    어둠이 세상을 뒤덮고, 희망의 불씨가 꺼져가는 순간... 
+                    세 명의 영웅이 운명을 거스르기 위해 일어선다. 
+                    Project NaNa의 대서사시가 지금 시작됩니다. 
+                    스토리 중심의 액션 RPG로 펼쳐지는 감동과 전율의 모험을 경험하세요.
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">모든 트레일러</h2>
+
+        <div class="video-grid">
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">2:47</div>
+                </div>
+                <div class="content">
+                    <div class="title">공식 출시 트레일러</div>
+                    <div class="date">2024년 12월 1일</div>
+                    <div class="views">👁️ 1,247,583 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">3:15</div>
+                </div>
+                <div class="content">
+                    <div class="title">스토리 트레일러 "어둠의 성역"</div>
+                    <div class="date">2024년 11월 15일</div>
+                    <div class="views">👁️ 892,341 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">1:58</div>
+                </div>
+                <div class="content">
+                    <div class="title">캐릭터 소개 트레일러</div>
+                    <div class="date">2024년 10월 28일</div>
+                    <div class="views">👁️ 654,782 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">2:23</div>
+                </div>
+                <div class="content">
+                    <div class="title">전투 시스템 트레일러</div>
+                    <div class="date">2024년 10월 15일</div>
+                    <div class="views">👁️ 523,198 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">4:12</div>
+                </div>
+                <div class="content">
+                    <div class="title">세계관 소개 트레일러</div>
+                    <div class="date">2024년 9월 20일</div>
+                    <div class="views">👁️ 487,652 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">1:45</div>
+                </div>
+                <div class="content">
+                    <div class="title">티저 트레일러</div>
+                    <div class="date">2024년 3월 15일</div>
+                    <div class="views">👁️ 2,134,567 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">2:01</div>
+                </div>
+                <div class="content">
+                    <div class="title">G-STAR 2023 공개 트레일러</div>
+                    <div class="date">2023년 11월 16일</div>
+                    <div class="views">👁️ 1,876,234 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">3:33</div>
+                </div>
+                <div class="content">
+                    <div class="title">베타 테스트 모집 트레일러</div>
+                    <div class="date">2023년 6월 10일</div>
+                    <div class="views">👁️ 1,234,891 조회</div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="alert('영상 재생')">
+                <div class="thumbnail">
+                    <div class="thumbnail-content">
+                        <div class="thumbnail-icon">🎬</div>
+                    </div>
+                    <div class="duration">1:30</div>
+                </div>
+                <div class="content">
+                    <div class="title">최초 공개 티저</div>
+                    <div class="date">2021년 10월 28일</div>
+                    <div class="views">👁️ 3,456,789 조회</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border: 1px solid #FFC107; border-radius: 12px;">
+            <h3 style="color: #FFC107; font-size: 24px; margin-bottom: 20px;">더 많은 영상을 보고 싶으신가요?</h3>
+            <p style="color: #ccc; margin-bottom: 30px;">
+                실제 게임플레이 영상과 개발자 인터뷰를 확인해보세요!
+            </p>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <button style="background-color: #FFC107; color: #000; border: none; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                        onclick="location.href='trailer-gameplay.html'">
+                    플레이 영상 보기
+                </button>
+                <button style="background-color: transparent; color: #FFC107; border: 2px solid #FFC107; padding: 15px 40px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;"
+                        onclick="location.href='trailer-commentary.html'">
+                    개발자 코멘터리
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

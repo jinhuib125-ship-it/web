@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>설치 가이드 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background-color: transparent;
+            border: 2px solid #FFC107;
+            color: #FFC107;
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover,
+        .tab-button.active {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .guide-section {
+            display: none;
+        }
+
+        .guide-section.active {
+            display: block;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-left: 4px solid #FFC107;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #FFC107;
+            color: #000;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-title {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-content {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-left: 55px;
+        }
+
+        .step-content p {
+            margin-bottom: 10px;
+        }
+
+        .step-content ul {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+
+        .step-content li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .step-content li::before {
+            content: '▹';
+            color: #FFC107;
+            position: absolute;
+            left: -20px;
+        }
+
+        .warning-box {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid #FF9800;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .warning-box h4 {
+            color: #FF9800;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .warning-box p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .tip-box {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .tip-box h4 {
+            color: #4CAF50;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .tip-box p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background-color: #1a1a1a;
+            border: 1px solid #FFC107;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #FFC107;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .step-content {
+                margin-left: 0;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="download.html">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="download.html">최신 버전 다운로드</a>
+                <a href="versions.html">이전 버전 / 히스토리</a>
+                <a href="requirements.html">권장 사양 / 최소 사양</a>
+                <a href="install.html">설치 가이드</a>
+                <a href="patch.html">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">설치 가이드</h1>
+
+        <div class="tab-container">
+            <button class="tab-button active" onclick="showGuide('windows')">🖥️ Windows</button>
+            <button class="tab-button" onclick="showGuide('macos')">🍎 macOS</button>
+            <button class="tab-button" onclick="showGuide('linux')">🐧 Linux</button>
+        </div>
+
+        <!-- Windows 가이드 -->
+        <div id="windows" class="guide-section active">
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    다운로드 파일 확인
+                </div>
+                <div class="step-content">
+                    <p>다운로드한 설치 파일(ProjectNaNa_Setup.exe)을 확인합니다.</p>
+                    <ul>
+                        <li>파일 크기: 약 15.7 GB</li>
+                        <li>파일명: ProjectNaNa_Setup_v1.5.2.exe</li>
+                        <li>다운로드 위치: 일반적으로 "다운로드" 폴더</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    설치 파일 실행
+                </div>
+                <div class="step-content">
+                    <p>다운로드한 파일을 더블클릭하여 설치 프로그램을 실행합니다.</p>
+                    <p>Windows에서 "이 앱이 디바이스를 변경할 수 있도록 허용하시겠습니까?"라는 메시지가 나타나면 "예"를 클릭합니다.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 보안 경고가 나타나는 경우</h4>
+                <p>Windows Defender나 바이러스 백신 프로그램이 설치를 차단할 수 있습니다. 이 경우 일시적으로 보안 프로그램을 비활성화하거나, 예외 목록에 추가해주세요.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    설치 언어 선택
+                </div>
+                <div class="step-content">
+                    <p>설치 마법사가 시작되면 원하는 언어를 선택합니다.</p>
+                    <p>한국어를 선택하고 "다음" 버튼을 클릭합니다.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    라이선스 동의
+                </div>
+                <div class="step-content">
+                    <p>이용 약관과 개인정보 처리방침을 읽고 동의합니다.</p>
+                    <ul>
+                        <li>"이용 약관에 동의합니다" 체크박스 선택</li>
+                        <li>"개인정보 처리방침에 동의합니다" 체크박스 선택</li>
+                        <li>"다음" 버튼 클릭</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">5</span>
+                    설치 경로 선택
+                </div>
+                <div class="step-content">
+                    <p>게임을 설치할 폴더를 선택합니다.</p>
+                    <p>기본 경로: C:\Program Files\NaNa GAMES\Project NaNa</p>
+                    <p>변경하려면 "찾아보기" 버튼을 클릭하여 원하는 위치를 선택합니다.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 설치 경로 추천</h4>
+                <p>SSD에 설치하면 로딩 시간이 크게 단축됩니다. 가능하면 SSD의 여유 공간이 충분한 드라이브를 선택하세요. (최소 50GB 권장)</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">6</span>
+                    추가 옵션 선택
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li>바탕화면 바로가기 만들기 (권장)</li>
+                        <li>시작 메뉴에 추가하기 (권장)</li>
+                        <li>DirectX 및 Visual C++ 재배포 패키지 설치 (필수)</li>
+                    </ul>
+                    <p>원하는 옵션을 선택하고 "설치" 버튼을 클릭합니다.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">7</span>
+                    설치 진행
+                </div>
+                <div class="step-content">
+                    <p>설치가 진행됩니다. 파일 크기가 크므로 10-20분 정도 소요될 수 있습니다.</p>
+                    <p>진행 상황 표시줄로 설치 진행률을 확인할 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">8</span>
+                    설치 완료
+                </div>
+                <div class="step-content">
+                    <p>설치가 완료되면 "완료" 버튼을 클릭합니다.</p>
+                    <p>"Project NaNa 실행" 옵션을 체크하면 게임이 자동으로 실행됩니다.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 첫 실행 시</h4>
+                <p>게임을 처음 실행하면 셰이더 컴파일 과정이 진행됩니다. 이 과정은 최초 1회만 진행되며, 2-5분 정도 소요됩니다. 완료될 때까지 기다려주세요.</p>
+            </div>
+        </div>
+
+        <!-- macOS 가이드 -->
+        <div id="macos" class="guide-section">
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    DMG 파일 다운로드
+                </div>
+                <div class="step-content">
+                    <p>macOS용 설치 파일(ProjectNaNa.dmg)을 다운로드합니다.</p>
+                    <p>Safari를 사용하는 경우 자동으로 마운트될 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    DMG 파일 열기
+                </div>
+                <div class="step-content">
+                    <p>다운로드 폴더에서 ProjectNaNa.dmg 파일을 더블클릭합니다.</p>
+                    <p>디스크 이미지가 마운트되고 설치 창이 열립니다.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    애플리케이션 폴더로 이동
+                </div>
+                <div class="step-content">
+                    <p>Project NaNa 아이콘을 Applications(응용 프로그램) 폴더로 드래그합니다.</p>
+                    <p>복사가 완료될 때까지 기다립니다 (약 2-3분).</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    첫 실행
+                </div>
+                <div class="step-content">
+                    <p>Launchpad 또는 Applications 폴더에서 Project NaNa를 실행합니다.</p>
+                    <p>"인터넷에서 다운로드한 애플리케이션입니다" 경고가 나타나면 "열기"를 클릭합니다.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 보안 경고 처리</h4>
+                <p>Gatekeeper가 실행을 차단하는 경우:</p>
+                <div class="code-block">
+1. 시스템 환경설정 > 보안 및 개인정보 보호<br>
+2. "일반" 탭에서 "확인 없이 열기" 버튼 클릭
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">5</span>
+                    Metal 지원 확인
+                </div>
+                <div class="step-content">
+                    <p>게임은 Metal을 사용합니다. macOS 11.0 (Big Sur) 이상이 필요합니다.</p>
+                    <p>Apple Silicon Mac의 경우 Rosetta 2 없이 네이티브로 실행됩니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linux 가이드 -->
+        <div id="linux" class="guide-section">
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    패키지 다운로드
+                </div>
+                <div class="step-content">
+                    <p>배포판에 맞는 패키지를 다운로드합니다:</p>
+                    <ul>
+                        <li>Ubuntu/Debian: .deb 파일</li>
+                        <li>Fedora/RHEL: .rpm 파일</li>
+                        <li>기타: .tar.gz 파일</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Ubuntu/Debian 설치
+                </div>
+                <div class="step-content">
+                    <p>터미널에서 다음 명령어를 실행합니다:</p>
+                    <div class="code-block">
+sudo dpkg -i projectnana_1.5.2_amd64.deb<br>
+sudo apt-get install -f
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    Fedora/RHEL 설치
+                </div>
+                <div class="step-content">
+                    <p>터미널에서 다음 명령어를 실행합니다:</p>
+                    <div class="code-block">
+sudo dnf install projectnana-1.5.2.x86_64.rpm
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    의존성 확인
+                </div>
+                <div class="step-content">
+                    <p>필요한 라이브러리를 설치합니다:</p>
+                    <div class="code-block">
+# Ubuntu/Debian<br>
+sudo apt-get install vulkan-tools libvulkan1<br>
+<br>
+# Fedora<br>
+sudo dnf install vulkan-tools vulkan-loader
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">5</span>
+                    그래픽 드라이버 확인
+                </div>
+                <div class="step-content">
+                    <p>Vulkan이 제대로 작동하는지 확인합니다:</p>
+                    <div class="code-block">
+vulkaninfo | grep "GPU"
+                    </div>
+                    <p>GPU 정보가 출력되면 정상입니다.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">6</span>
+                    게임 실행
+                </div>
+                <div class="step-content">
+                    <p>애플리케이션 메뉴에서 Project NaNa를 실행하거나, 터미널에서:</p>
+                    <div class="code-block">
+projectnana
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 성능 최적화</h4>
+                <p>NVIDIA GPU를 사용하는 경우 독점 드라이버를 설치하면 성능이 크게 향상됩니다. AMD GPU의 경우 Mesa 22.0 이상을 권장합니다.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showGuide(platform) {
+            // 모든 섹션 숨기기
+            const sections = document.querySelectorAll('.guide-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // 모든 버튼 비활성화
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            // 선택된 섹션 표시
+            document.getElementById(platform).classList.add('active');
+
+            // 선택된 버튼 활성화
+            event.target.classList.add('active');
+        }
+    </script>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

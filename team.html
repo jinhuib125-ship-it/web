@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팀 소개 - NaNa GAMES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFC107;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .auth-buttons button {
+            background: none;
+            
+            color: #FFC107;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+        }
+
+        .nav-item > a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item > a:hover {
+            color: #FFC107;
+        }
+
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            
+            border-radius: 8px;
+            padding: 20px 30px;
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            min-width: 800px;
+        }
+
+        nav:hover .submenu-container {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .submenu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: #FFC107;
+            padding-left: 20px;
+        }
+
+        main {
+            padding: 200px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 48px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 20px;
+        }
+
+        .team-intro {
+            text-align: center;
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 60px;
+            line-height: 1.8;
+        }
+
+        .team-section {
+            margin-bottom: 80px;
+        }
+
+        .team-section h2 {
+            font-size: 32px;
+            color: #FFC107;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.02));
+            border: 1px solid #FFC107;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFC107, #FFA500);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .team-name {
+            font-size: 24px;
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        .team-role {
+            font-size: 16px;
+            color: #FFA500;
+            margin-bottom: 15px;
+        }
+
+        .team-description {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+        .refresh-btn {
+            font-size: 24px;
+            color: #FFC107;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+            nav {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding: 180px 20px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .team-section h2 {
+                font-size: 24px;
+            }
+
+            .submenu-container {
+                min-width: 90vw;
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="refresh-btn" onclick="location.reload()">↻</div>
+        <a href="index.html" class="logo">NaNa GAMES</a>
+        <div class="auth-buttons">
+            <button onclick="location.href='login.html'">로그인</button>
+            <button onclick="location.href='signup.html'">회원가입</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item">
+            <a href="company.html">소개</a>
+        </div>
+        <div class="nav-item">
+            <a href="#download">다운로드</a>
+        </div>
+        <div class="nav-item">
+            <a href="demo-pc.html">체험판</a>
+        </div>
+        <div class="nav-item">
+            <a href="trailer-official.html">트레일러</a>
+        </div>
+        <div class="nav-item">
+            <a href="info-story.html">정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="qna-faq.html">Q&A</a>
+        </div>
+
+        <div class="submenu-container">
+            <div class="submenu">
+                <a href="company.html">회사 소개</a>
+                <a href="team.html">팀 소개</a>
+                <a href="vision.html">우리의 철학/비전</a>
+                <a href="history.html">연혁</a>
+                <a href="recruit.html">채용 안내</a>
+            </div>
+            <div class="submenu">
+                <a href="#latest">최신 버전 다운로드</a>
+                <a href="#versions">이전 버전 / 히스토리</a>
+                <a href="#requirements">권장 사양 / 최소 사양</a>
+                <a href="#install">설치 가이드</a>
+                <a href="#patch">패치 노트</a>
+            </div>
+            <div class="submenu">
+                <a href="demo-pc.html">PC 체험판</a>
+                <a href="demo-mobile.html">모바일 체험판</a>
+                <a href="demo-web.html">웹 버전 체험하기</a>
+                <a href="demo-guide.html">플레이 가이드</a>
+                <a href="demo-bug.html">버그 제보</a>
+            </div>
+            <div class="submenu">
+                <a href="trailer-official.html">공식 트레일러</a>
+                <a href="trailer-gameplay.html">플레이 영상</a>
+                <a href="trailer-commentary.html">개발자 코멘터리</a>
+                <a href="trailer-screenshots.html">스크린샷 모음</a>
+                <a href="trailer-ost.html">OST 미리 듣기</a>
+            </div>
+            <div class="submenu">
+                <a href="info-story.html">스토리 소개</a>
+                <a href="info-characters.html">주요 캐릭터</a>
+                <a href="info-system.html">게임 시스템</a>
+                <a href="info-world.html">맵/세계관 설명</a>
+                <a href="info-updates.html">업데이트 계획</a>
+            </div>
+            <div class="submenu">
+                <a href="qna-faq.html">자주 묻는 질문(FAQ)</a>
+                <a href="qna-bug.html">버그 신고</a>
+                <a href="qna-contact.html">문의하기</a>
+                <a href="qna-account.html">계정/로그인 문제 해결</a>
+                <a href="qna-policy.html">게임 정책</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="page-title">팀 소개</h1>
+
+        <p class="team-intro">
+            NaNa GAMES는 다양한 분야의 전문가들이 모여 최고의 게임을 만들어가고 있습니다.<br>
+            열정과 창의성으로 무장한 우리 팀을 소개합니다.
+        </p>
+
+        <div class="team-section">
+            <h2>경영진</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">K</div>
+                    <div class="team-name">김나나</div>
+                    <div class="team-role">CEO & Founder</div>
+                    <div class="team-description">
+                        게임 산업 15년 경력의 베테랑. 플레이어 중심의 게임 개발 철학을 바탕으로 NaNa GAMES를 이끌고 있습니다.
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">L</div>
+                    <div class="team-name">이준호</div>
+                    <div class="team-role">CTO</div>
+                    <div class="team-description">
+                        게임 엔진 개발 전문가. 최신 기술을 활용하여 혁신적인 게임 경험을 구현합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>개발팀</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">P</div>
+                    <div class="team-name">박서연</div>
+                    <div class="team-role">Lead Programmer</div>
+                    <div class="team-description">
+                        게임 로직과 시스템 설계의 핵심 개발자. 복잡한 게임 메커니즘을 우아한 코드로 구현합니다.
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">C</div>
+                    <div class="team-name">최민수</div>
+                    <div class="team-role">Graphics Programmer</div>
+                    <div class="team-description">
+                        렌더링 파이프라인 최적화 전문가. 아름다운 비주얼과 최고의 성능을 동시에 달성합니다.
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">J</div>
+                    <div class="team-name">정하늘</div>
+                    <div class="team-role">AI Programmer</div>
+                    <div class="team-description">
+                        게임 AI 시스템 설계자. 플레이어에게 도전과 재미를 주는 지능적인 NPC를 만듭니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>아트팀</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">K</div>
+                    <div class="team-name">강예린</div>
+                    <div class="team-role">Art Director</div>
+                    <div class="team-description">
+                        게임의 비주얼 방향성을 제시하고 일관된 아트 스타일을 구축합니다.
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">S</div>
+                    <div class="team-name">송지우</div>
+                    <div class="team-role">Character Designer</div>
+                    <div class="team-description">
+                        매력적이고 개성 넘치는 캐릭터를 디자인하여 게임에 생명을 불어넣습니다.
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">H</div>
+                    <div class="team-name">한도윤</div>
+                    <div class="team-role">Environment Artist</div>
+                    <div class="team-description">
+                        몰입감 넘치는 게임 세계를 구축하여 플레이어를 새로운 세계로 안내합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>기획팀</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">O</div>
+                    <div class="team-name">오수진</div>
+                    <div class="team-role">Lead Designer</div>
+                    <div class="team-description">
+                        게임의 전체적인 디자인과 밸런스를 담당하며, 재미있는 게임플레이를 설계합니다.
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">Y</div>
+                    <div class="team-name">윤태영</div>
+                    <div class="team-role">Story Writer</div>
+                    <div class="team-description">
+                        감동적이고 몰입감 있는 스토리를 집필하여 플레이어의 마음을 사로잡습니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 로그인 상태 체크 및 헤더 업데이트
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser && authButtons) {
+                authButtons.innerHTML = `
+                    <span style="color: #FFC107; margin-right: 15px; font-size: 14px;">
+                        👤 ${currentUser.name}님
+                    </span>
+                    <button onclick="logout()">로그아웃</button>
+                `;
+            }
+        })();
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('currentUser');
+                alert('로그아웃되었습니다.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
